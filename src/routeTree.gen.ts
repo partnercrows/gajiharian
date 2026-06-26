@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TemplatesRouteImport } from './routes/templates'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as PrintRouteImport } from './routes/print'
 import { Route as EditorRouteImport } from './routes/editor'
@@ -19,6 +20,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const TemplatesRoute = TemplatesRouteImport.update({
   id: '/templates',
   path: '/templates',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsRoute = SettingsRouteImport.update({
@@ -53,6 +59,7 @@ export interface FileRoutesByFullPath {
   '/editor': typeof EditorRoute
   '/print': typeof PrintRoute
   '/settings': typeof SettingsRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/templates': typeof TemplatesRoute
 }
 export interface FileRoutesByTo {
@@ -61,6 +68,7 @@ export interface FileRoutesByTo {
   '/editor': typeof EditorRoute
   '/print': typeof PrintRoute
   '/settings': typeof SettingsRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/templates': typeof TemplatesRoute
 }
 export interface FileRoutesById {
@@ -70,13 +78,28 @@ export interface FileRoutesById {
   '/editor': typeof EditorRoute
   '/print': typeof PrintRoute
   '/settings': typeof SettingsRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/templates': typeof TemplatesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/drafts' | '/editor' | '/print' | '/settings' | '/templates'
+  fullPaths:
+    | '/'
+    | '/drafts'
+    | '/editor'
+    | '/print'
+    | '/settings'
+    | '/sitemap.xml'
+    | '/templates'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/drafts' | '/editor' | '/print' | '/settings' | '/templates'
+  to:
+    | '/'
+    | '/drafts'
+    | '/editor'
+    | '/print'
+    | '/settings'
+    | '/sitemap.xml'
+    | '/templates'
   id:
     | '__root__'
     | '/'
@@ -84,6 +107,7 @@ export interface FileRouteTypes {
     | '/editor'
     | '/print'
     | '/settings'
+    | '/sitemap.xml'
     | '/templates'
   fileRoutesById: FileRoutesById
 }
@@ -93,6 +117,7 @@ export interface RootRouteChildren {
   EditorRoute: typeof EditorRoute
   PrintRoute: typeof PrintRoute
   SettingsRoute: typeof SettingsRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TemplatesRoute: typeof TemplatesRoute
 }
 
@@ -103,6 +128,13 @@ declare module '@tanstack/react-router' {
       path: '/templates'
       fullPath: '/templates'
       preLoaderRoute: typeof TemplatesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/settings': {
@@ -149,6 +181,7 @@ const rootRouteChildren: RootRouteChildren = {
   EditorRoute: EditorRoute,
   PrintRoute: PrintRoute,
   SettingsRoute: SettingsRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   TemplatesRoute: TemplatesRoute,
 }
 export const routeTree = rootRouteImport
