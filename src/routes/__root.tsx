@@ -80,10 +80,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Gajian Harianku — Payroll Invoice Generator" },
       { name: "description", content: "Generate daily worker payroll invoices fast. 100% local — no backend, no signup." },
-      { property: "og:title", content: "Gajian Harianku" },
-      { property: "og:description", content: "Daily payroll invoice generator with Excel import, templates, and printable A4 output." },
+      { property: "og:title", content: "Gajian Harianku — Payroll Invoice Generator" },
+      { property: "og:description", content: "Generate daily worker payroll invoices fast. 100% local — no backend, no signup." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "Gajian Harianku — Payroll Invoice Generator" },
+      { name: "twitter:description", content: "Generate daily worker payroll invoices fast. 100% local — no backend, no signup." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/0ab14007-ee54-4ff5-8b5e-f30ca992b5d5/id-preview-2fbed06f--254c750d-bccc-4b2c-9948-903f8763f070.lovable.app-1782446986674.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/0ab14007-ee54-4ff5-8b5e-f30ca992b5d5/id-preview-2fbed06f--254c750d-bccc-4b2c-9948-903f8763f070.lovable.app-1782446986674.png" },
     ],
     links: [
       {
