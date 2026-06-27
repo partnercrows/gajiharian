@@ -71,7 +71,7 @@ function DraftsPage() {
               <tbody>
                 {drafts.map((d) => (
                   <tr key={d.id} className="border-t hover:bg-muted/30">
-                    <td className="px-4 py-3 font-medium">{d.header.projectTitle || "Untitled"}</td>
+                    <td className="px-4 py-3 font-medium">{d.header.projectTitle || "Tanpa Judul"}</td>
                     <td className="px-4 py-3 font-mono text-xs">{d.header.invoiceNumber}</td>
                     <td className="px-4 py-3">{formatDateID(d.header.paymentDate)}</td>
                     <td className="px-4 py-3 text-right tabular-nums">{d.employees.length}</td>
@@ -86,11 +86,11 @@ function DraftsPage() {
                           size="sm"
                           onClick={() => {
                             loadProject(d);
-                            toast.success("Draft loaded");
+                            toast.success("Draft dimuat");
                             navigate({ to: "/editor" });
                           }}
                         >
-                          <ExternalLink className="h-4 w-4" /> Open
+                          <ExternalLink className="h-4 w-4" /> Buka
                         </Button>
                         <Button
                           variant="ghost"
@@ -113,15 +113,15 @@ function DraftsPage() {
       <AlertDialog open={!!del} onOpenChange={(o) => !o && setDel(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete this draft?</AlertDialogTitle>
-            <AlertDialogDescription>This action can't be undone.</AlertDialogDescription>
+            <AlertDialogTitle>Hapus draft ini?</AlertDialogTitle>
+            <AlertDialogDescription>Tindakan ini tidak dapat dibatalkan.</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Batal</AlertDialogCancel>
             <AlertDialogAction onClick={() => {
-              if (del) { deleteDraft(del); toast.success("Draft deleted"); }
+              if (del) { deleteDraft(del); toast.success("Draft dihapus"); }
               setDel(null);
-            }}>Delete</AlertDialogAction>
+            }}>Hapus</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
