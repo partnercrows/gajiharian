@@ -12,11 +12,11 @@ import { useInvoiceStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 const nav = [
-  { to: "/", label: "Dashboard", icon: LayoutDashboard, exact: true },
-  { to: "/editor", label: "Invoice Editor", icon: FileText, exact: false },
-  { to: "/drafts", label: "Draft Projects", icon: FolderOpen, exact: false },
-  { to: "/templates", label: "Templates", icon: Layers, exact: false },
-  { to: "/settings", label: "Settings", icon: SettingsIcon, exact: false },
+  { to: "/", label: "Dasbor", icon: LayoutDashboard, exact: true },
+  { to: "/editor", label: "Editor Gaji", icon: FileText, exact: false },
+  { to: "/drafts", label: "Draft Proyek", icon: FolderOpen, exact: false },
+  { to: "/templates", label: "Template", icon: Layers, exact: false },
+  { to: "/settings", label: "Pengaturan", icon: SettingsIcon, exact: false },
 ] as const;
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
