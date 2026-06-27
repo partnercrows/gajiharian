@@ -166,7 +166,7 @@ function PrintPage() {
           </div>
 
           <div className="mt-12 pt-4 border-t text-[10px] text-center text-gray-400">
-            Generated with Gajian Harianku · {formatDateID(new Date().toISOString())}
+            Dibuat dengan Gajian Harianku · {formatDateID(new Date().toISOString())}
           </div>
         </div>
       </div>
