@@ -108,14 +108,14 @@ export function ExcelImportDialog({ open, onOpenChange }: Props) {
               <Card className="p-4 border-success/40 bg-success/5">
                 <div className="flex items-center gap-2 text-success">
                   <CheckCircle2 className="h-4 w-4" />
-                  <span className="text-xs font-medium uppercase">Imported</span>
+                  <span className="text-xs font-medium uppercase">Diimpor</span>
                 </div>
                 <div className="text-2xl font-bold mt-1">{result.imported.length}</div>
               </Card>
               <Card className="p-4 border-destructive/40 bg-destructive/5">
                 <div className="flex items-center gap-2 text-destructive">
                   <AlertCircle className="h-4 w-4" />
-                  <span className="text-xs font-medium uppercase">Invalid</span>
+                  <span className="text-xs font-medium uppercase">Tidak Valid</span>
                 </div>
                 <div className="text-2xl font-bold mt-1">{result.invalid}</div>
               </Card>
@@ -123,18 +123,18 @@ export function ExcelImportDialog({ open, onOpenChange }: Props) {
             {result.errors.length > 0 && (
               <div className="text-xs text-muted-foreground max-h-32 overflow-auto bg-muted/40 rounded-md p-3 space-y-0.5">
                 {result.errors.slice(0, 20).map((er, i) => (<div key={i}>· {er}</div>))}
-                {result.errors.length > 20 && <div>…and {result.errors.length - 20} more</div>}
+                {result.errors.length > 20 && <div>…dan {result.errors.length - 20} lainnya</div>}
               </div>
             )}
             <DialogFooter className="gap-2 sm:gap-2">
-              <Button variant="outline" onClick={() => setResult(null)}>Choose another file</Button>
+              <Button variant="outline" onClick={() => setResult(null)}>Pilih file lain</Button>
               {employees.length > 0 && (
                 <Button variant="secondary" onClick={() => onApply("append")} disabled={result.imported.length === 0}>
-                  Append to existing
+                  Tambahkan ke daftar
                 </Button>
               )}
               <Button onClick={() => onApply("replace")} disabled={result.imported.length === 0}>
-                {employees.length > 0 ? "Replace existing" : "Add to invoice"}
+                {employees.length > 0 ? "Ganti yang ada" : "Tambahkan ke invoice"}
               </Button>
             </DialogFooter>
           </div>
