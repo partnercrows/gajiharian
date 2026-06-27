@@ -69,7 +69,7 @@ function SignatureBox({
             <button
               onClick={() => onImage(undefined)}
               className="absolute top-1 right-1 h-6 w-6 rounded-full bg-destructive text-destructive-foreground grid place-items-center hover:bg-destructive/90"
-              title="Remove"
+              title="Hapus"
             >
               <X className="h-3 w-3" />
             </button>
@@ -82,7 +82,7 @@ function SignatureBox({
             onClick={() => inputRef.current?.click()}
             className="text-muted-foreground"
           >
-            <Upload className="h-4 w-4" /> Upload signature
+            <Upload className="h-4 w-4" /> Unggah tanda tangan
           </Button>
         )}
         <input
