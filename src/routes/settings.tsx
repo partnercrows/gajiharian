@@ -11,8 +11,8 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/settings")({
   head: () => ({
     meta: [
-      { title: "Settings — Gajian Harianku" },
-      { name: "description", content: "Workspace settings for Gajian Harianku." },
+      { title: "Pengaturan — Gajian Harianku" },
+      { name: "description", content: "Pengaturan workspace Gajian Harianku." },
     ],
   }),
   component: SettingsPage,
@@ -27,14 +27,14 @@ function SettingsPage() {
     <AppLayout>
       <div className="max-w-3xl mx-auto px-6 py-8 space-y-6">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Settings</h1>
-          <p className="text-muted-foreground text-sm mt-1">Shown on every printed invoice.</p>
+          <h1 className="text-2xl font-bold tracking-tight">Pengaturan</h1>
+          <p className="text-muted-foreground text-sm mt-1">Tampil pada setiap invoice yang dicetak.</p>
         </div>
 
         <Card className="p-6 space-y-4">
-          <h2 className="font-semibold">Company / Workspace</h2>
+          <h2 className="font-semibold">Perusahaan / Workspace</h2>
           <div className="space-y-1.5">
-            <Label className="text-xs font-medium">Company name</Label>
+            <Label className="text-xs font-medium">Nama perusahaan</Label>
             <Input
               value={companyName}
               onChange={(e) => update({ companyName: e.target.value })}
@@ -42,7 +42,7 @@ function SettingsPage() {
             />
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs font-medium">Address (optional)</Label>
+            <Label className="text-xs font-medium">Alamat (opsional)</Label>
             <Textarea
               value={companyAddress}
               onChange={(e) => update({ companyAddress: e.target.value })}
@@ -51,14 +51,14 @@ function SettingsPage() {
             />
           </div>
           <div className="pt-2">
-            <Button onClick={() => toast.success("Settings saved locally")}>Save</Button>
+            <Button onClick={() => toast.success("Pengaturan tersimpan")}>Simpan</Button>
           </div>
         </Card>
 
         <Card className="p-6 text-sm text-muted-foreground space-y-2">
-          <h2 className="font-semibold text-foreground">About your data</h2>
-          <p>Everything (invoices, drafts, templates) is stored in your browser's IndexedDB. Nothing is sent to any server.</p>
-          <p>Clearing your browser's site data will permanently remove all saved invoices. Export important projects as <code className="font-mono bg-muted px-1 rounded">.payroll</code> files to keep backups.</p>
+          <h2 className="font-semibold text-foreground">Tentang data Anda</h2>
+          <p>Semua data (invoice, draft, template) tersimpan di IndexedDB browser. Tidak ada yang dikirim ke server.</p>
+          <p>Menghapus data situs di browser akan menghapus semua invoice secara permanen. Ekspor proyek penting sebagai file <code className="font-mono bg-muted px-1 rounded">.payroll</code> untuk cadangan.</p>
         </Card>
       </div>
     </AppLayout>
