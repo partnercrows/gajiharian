@@ -83,15 +83,15 @@ function PrintPage() {
           {/* Meta */}
           <div className="grid grid-cols-2 gap-8 my-6 text-sm">
             <div>
-              <div className="text-[10px] uppercase tracking-wide text-gray-500 mb-1">Project</div>
+              <div className="text-[10px] uppercase tracking-wide text-gray-500 mb-1">Proyek</div>
               <div className="font-semibold text-base">{header.projectTitle || "—"}</div>
-              <div className="text-[10px] uppercase tracking-wide text-gray-500 mt-3 mb-1">Person In Charge</div>
+              <div className="text-[10px] uppercase tracking-wide text-gray-500 mt-3 mb-1">Penanggung Jawab</div>
               <div className="font-medium">{header.personInCharge || "—"}</div>
             </div>
             <div>
-              <div className="text-[10px] uppercase tracking-wide text-gray-500 mb-1">Payment Date</div>
+              <div className="text-[10px] uppercase tracking-wide text-gray-500 mb-1">Tanggal Pembayaran</div>
               <div className="font-semibold">{formatDateID(header.paymentDate)}</div>
-              <div className="text-[10px] uppercase tracking-wide text-gray-500 mt-3 mb-1">Payment Method</div>
+              <div className="text-[10px] uppercase tracking-wide text-gray-500 mt-3 mb-1">Metode Pembayaran</div>
               <div className="font-medium">{paymentLabel}</div>
               {header.paymentMethod === "transfer" && (header.bankName || header.accountNumber) && (
                 <div className="mt-1.5 text-xs text-gray-600">
