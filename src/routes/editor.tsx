@@ -71,20 +71,20 @@ function EditorPage() {
 
   const validateAndPrint = () => {
     if (!header.projectTitle.trim()) {
-      toast.error("Project title is required");
+      toast.error("Judul proyek wajib diisi");
       return;
     }
     if (!header.personInCharge.trim()) {
-      toast.error("Person in charge is required");
+      toast.error("Penanggung jawab wajib diisi");
       return;
     }
     if (employees.length === 0) {
-      toast.error("Add at least one employee");
+      toast.error("Tambahkan minimal satu karyawan");
       return;
     }
     const invalid = employees.some((e) => !e.name.trim() || e.workingDays <= 0);
     if (invalid) {
-      toast.error("Some rows are incomplete (name & working days)");
+      toast.error("Beberapa baris belum lengkap (nama & hari kerja)");
       return;
     }
     saveDraft();
@@ -93,7 +93,7 @@ function EditorPage() {
 
   const handleSave = () => {
     saveDraft();
-    toast.success("Draft saved locally");
+    toast.success("Draft tersimpan lokal");
   };
 
   const handleExport = () => {
