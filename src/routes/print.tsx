@@ -34,7 +34,7 @@ function PrintPage() {
   const days = totalWorkingDays(employees);
 
   const paymentLabel = {
-    cash: "Cash",
+    cash: "Tunai",
     transfer: "Transfer Bank",
     ewallet: "E-Wallet",
   }[header.paymentMethod];
@@ -45,12 +45,12 @@ function PrintPage() {
       <div className="no-print bg-surface border-b sticky top-0 z-20">
         <div className="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between gap-3">
           <Button variant="ghost" size="sm" onClick={() => navigate({ to: "/editor" })}>
-            <ArrowLeft className="h-4 w-4" /> Back to editor
+            <ArrowLeft className="h-4 w-4" /> Kembali ke editor
           </Button>
           <div className="flex items-center gap-2">
             <Link to="/" className="text-xs text-muted-foreground hover:underline">Dashboard</Link>
             <Button onClick={handlePrint} size="sm">
-              <Printer className="h-4 w-4" /> Print invoice
+              <Printer className="h-4 w-4" /> Cetak Invoice
             </Button>
           </div>
         </div>
