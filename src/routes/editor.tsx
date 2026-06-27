@@ -112,9 +112,9 @@ function EditorPage() {
     try {
       const proj = await importProject(file);
       loadProject(proj);
-      toast.success("Project loaded");
+      toast.success("Proyek dimuat");
     } catch (err) {
-      toast.error("Invalid .payroll file", { description: (err as Error).message });
+      toast.error("File .payroll tidak valid", { description: (err as Error).message });
     }
   };
 
