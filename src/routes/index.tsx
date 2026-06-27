@@ -100,20 +100,20 @@ function Dashboard() {
         <div className="grid md:grid-cols-2 gap-5">
           <Card className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold">Recent drafts</h3>
+              <h3 className="font-semibold">Draft terbaru</h3>
               <Link to="/drafts" className="text-xs text-primary hover:underline">
-                View all
+                Lihat semua
               </Link>
             </div>
             {drafts.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No drafts yet. Auto-save kicks in every 30s.</p>
+              <p className="text-sm text-muted-foreground">Belum ada draft. Auto-save berjalan setiap 30 detik.</p>
             ) : (
               <ul className="space-y-2">
                 {drafts.slice(0, 5).map((d) => (
                   <li key={d.id} className="flex items-center justify-between gap-3 text-sm py-2 border-b last:border-0">
                     <div className="min-w-0">
-                      <div className="font-medium truncate">{d.header.projectTitle || "Untitled project"}</div>
-                      <div className="text-xs text-muted-foreground">{d.employees.length} employees · {d.header.invoiceNumber}</div>
+                      <div className="font-medium truncate">{d.header.projectTitle || "Proyek tanpa judul"}</div>
+                      <div className="text-xs text-muted-foreground">{d.employees.length} karyawan · {d.header.invoiceNumber}</div>
                     </div>
                     <span className="text-xs font-medium shrink-0">{formatRupiah(grandTotal(d.employees))}</span>
                   </li>
@@ -124,17 +124,17 @@ function Dashboard() {
 
           <Card className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold">Worker templates</h3>
-              <Link to="/templates" className="text-xs text-primary hover:underline">Manage</Link>
+              <h3 className="font-semibold">Template pekerja</h3>
+              <Link to="/templates" className="text-xs text-primary hover:underline">Kelola</Link>
             </div>
             {templates.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No templates yet. Save your current worker list as a template from the editor.</p>
+              <p className="text-sm text-muted-foreground">Belum ada template. Simpan daftar pekerja dari editor sebagai template.</p>
             ) : (
               <ul className="space-y-2">
                 {templates.slice(0, 5).map((t) => (
                   <li key={t.id} className="flex items-center justify-between text-sm py-2 border-b last:border-0">
                     <span className="font-medium truncate">{t.name}</span>
-                    <span className="text-xs text-muted-foreground shrink-0">{t.workers.length} workers</span>
+                    <span className="text-xs text-muted-foreground shrink-0">{t.workers.length} pekerja</span>
                   </li>
                 ))}
               </ul>
