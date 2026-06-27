@@ -77,7 +77,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <span className="inline-flex h-2 w-2 rounded-full bg-success" />
-            All changes saved locally
+            Semua perubahan tersimpan lokal
           </div>
         </header>
         <main className="flex-1 overflow-auto">{children}</main>
