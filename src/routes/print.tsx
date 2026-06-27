@@ -124,7 +124,7 @@ function PrintPage() {
                   <td className="px-3 py-2 text-right tabular-nums font-semibold">{formatRupiah(totalForEmployee(e))}</td>
                   <td className="px-3 py-2 text-center text-[10px] uppercase font-semibold">
                     <span className={e.status === "paid" ? "text-emerald-700" : "text-amber-700"}>
-                      {e.status}
+                      {e.status === "paid" ? "Lunas" : "Pending"}
                     </span>
                   </td>
                 </tr>
@@ -138,7 +138,7 @@ function PrintPage() {
                 <td />
               </tr>
               <tr className="bg-[var(--color-primary)] text-white">
-                <td colSpan={4} className="px-3 py-2.5 text-right uppercase tracking-wide text-xs">Grand Total</td>
+                <td colSpan={4} className="px-3 py-2.5 text-right uppercase tracking-wide text-xs">Total Keseluruhan</td>
                 <td className="px-3 py-2.5 text-right text-base font-bold tabular-nums">{formatRupiah(total)}</td>
                 <td />
               </tr>
