@@ -64,7 +64,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           })}
         </nav>
         <div className="px-5 py-4 text-[11px] text-sidebar-foreground/50 border-t border-sidebar-border">
-          v1.0 · 100% local data
+          v1.0 · 100% data lokal
         </div>
       </aside>
 
