@@ -9,8 +9,8 @@ import { formatRupiah, formatDateID, formatNumber } from "@/lib/format";
 export const Route = createFileRoute("/print")({
   head: () => ({
     meta: [
-      { title: "Print Preview — Gajian Harianku" },
-      { name: "description", content: "A4 portrait print preview of the payroll invoice." },
+      { title: "Pratinjau Cetak — Gajian Harianku" },
+      { name: "description", content: "Pratinjau cetak A4 portrait invoice payroll." },
     ],
   }),
   component: PrintPage,
@@ -34,7 +34,7 @@ function PrintPage() {
   const days = totalWorkingDays(employees);
 
   const paymentLabel = {
-    cash: "Cash",
+    cash: "Tunai",
     transfer: "Transfer Bank",
     ewallet: "E-Wallet",
   }[header.paymentMethod];
@@ -45,12 +45,12 @@ function PrintPage() {
       <div className="no-print bg-surface border-b sticky top-0 z-20">
         <div className="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between gap-3">
           <Button variant="ghost" size="sm" onClick={() => navigate({ to: "/editor" })}>
-            <ArrowLeft className="h-4 w-4" /> Back to editor
+            <ArrowLeft className="h-4 w-4" /> Kembali ke editor
           </Button>
           <div className="flex items-center gap-2">
             <Link to="/" className="text-xs text-muted-foreground hover:underline">Dashboard</Link>
             <Button onClick={handlePrint} size="sm">
-              <Printer className="h-4 w-4" /> Print invoice
+              <Printer className="h-4 w-4" /> Cetak Invoice
             </Button>
           </div>
         </div>
@@ -83,15 +83,15 @@ function PrintPage() {
           {/* Meta */}
           <div className="grid grid-cols-2 gap-8 my-6 text-sm">
             <div>
-              <div className="text-[10px] uppercase tracking-wide text-gray-500 mb-1">Project</div>
+              <div className="text-[10px] uppercase tracking-wide text-gray-500 mb-1">Proyek</div>
               <div className="font-semibold text-base">{header.projectTitle || "—"}</div>
-              <div className="text-[10px] uppercase tracking-wide text-gray-500 mt-3 mb-1">Person In Charge</div>
+              <div className="text-[10px] uppercase tracking-wide text-gray-500 mt-3 mb-1">Penanggung Jawab</div>
               <div className="font-medium">{header.personInCharge || "—"}</div>
             </div>
             <div>
-              <div className="text-[10px] uppercase tracking-wide text-gray-500 mb-1">Payment Date</div>
+              <div className="text-[10px] uppercase tracking-wide text-gray-500 mb-1">Tanggal Pembayaran</div>
               <div className="font-semibold">{formatDateID(header.paymentDate)}</div>
-              <div className="text-[10px] uppercase tracking-wide text-gray-500 mt-3 mb-1">Payment Method</div>
+              <div className="text-[10px] uppercase tracking-wide text-gray-500 mt-3 mb-1">Metode Pembayaran</div>
               <div className="font-medium">{paymentLabel}</div>
               {header.paymentMethod === "transfer" && (header.bankName || header.accountNumber) && (
                 <div className="mt-1.5 text-xs text-gray-600">
@@ -124,7 +124,7 @@ function PrintPage() {
                   <td className="px-3 py-2 text-right tabular-nums font-semibold">{formatRupiah(totalForEmployee(e))}</td>
                   <td className="px-3 py-2 text-center text-[10px] uppercase font-semibold">
                     <span className={e.status === "paid" ? "text-emerald-700" : "text-amber-700"}>
-                      {e.status}
+                      {e.status === "paid" ? "Lunas" : "Pending"}
                     </span>
                   </td>
                 </tr>
@@ -138,7 +138,7 @@ function PrintPage() {
                 <td />
               </tr>
               <tr className="bg-[var(--color-primary)] text-white">
-                <td colSpan={4} className="px-3 py-2.5 text-right uppercase tracking-wide text-xs">Grand Total</td>
+                <td colSpan={4} className="px-3 py-2.5 text-right uppercase tracking-wide text-xs">Total Keseluruhan</td>
                 <td className="px-3 py-2.5 text-right text-base font-bold tabular-nums">{formatRupiah(total)}</td>
                 <td />
               </tr>
@@ -166,7 +166,7 @@ function PrintPage() {
           </div>
 
           <div className="mt-12 pt-4 border-t text-[10px] text-center text-gray-400">
-            Generated with Gajian Harianku · {formatDateID(new Date().toISOString())}
+            Dibuat dengan Gajian Harianku · {formatDateID(new Date().toISOString())}
           </div>
         </div>
       </div>

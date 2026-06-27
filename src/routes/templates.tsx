@@ -52,22 +52,22 @@ function TemplatesPage() {
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Worker Templates</h1>
+            <h1 className="text-2xl font-bold tracking-tight">Template Pekerja</h1>
             <p className="text-muted-foreground text-sm mt-1">
-              Save recurring worker lists. Loading a template adds workers with default salaries and 1 day of work.
+              Simpan daftar pekerja yang sering dipakai. Memuat template menambahkan pekerja dengan upah default dan 1 hari kerja.
             </p>
           </div>
           <Button onClick={() => navigate({ to: "/editor" })}>
-            <Plus className="h-4 w-4" /> New invoice
+            <Plus className="h-4 w-4" /> Invoice Baru
           </Button>
         </div>
 
         {templates.length === 0 ? (
           <Card className="p-16 text-center">
             <Layers className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
-            <p className="font-medium">No templates yet</p>
+            <p className="font-medium">Belum ada template</p>
             <p className="text-sm text-muted-foreground mt-1 max-w-md mx-auto">
-              From the invoice editor, click "Save as template" to store your current worker list for next time.
+              Dari editor invoice, klik "Simpan Template" untuk menyimpan daftar pekerja saat ini.
             </p>
           </Card>
         ) : (
@@ -81,7 +81,7 @@ function TemplatesPage() {
                   <div className="min-w-0">
                     <h3 className="font-semibold truncate">{t.name}</h3>
                     <p className="text-xs text-muted-foreground mt-0.5">
-                      {t.workers.length} workers · avg {formatRupiah(avg)}/day
+                      {t.workers.length} pekerja · rata-rata {formatRupiah(avg)}/hari
                     </p>
                   </div>
                   <ul className="text-xs text-muted-foreground space-y-0.5 max-h-32 overflow-auto">
@@ -91,18 +91,18 @@ function TemplatesPage() {
                         <span className="shrink-0 tabular-nums">{formatRupiah(w.dailySalary)}</span>
                       </li>
                     ))}
-                    {t.workers.length > 6 && <li>+{t.workers.length - 6} more…</li>}
+                    {t.workers.length > 6 && <li>+{t.workers.length - 6} lainnya…</li>}
                   </ul>
                   <div className="flex items-center justify-between gap-2 pt-2 border-t">
                     <Button
                       size="sm"
                       onClick={() => {
                         loadTemplate(t.id);
-                        toast.success(`Loaded ${t.workers.length} workers`);
+                        toast.success(`Memuat ${t.workers.length} pekerja`);
                         navigate({ to: "/editor" });
                       }}
                     >
-                      <Download className="h-4 w-4" /> Load
+                      <Download className="h-4 w-4" /> Muat
                     </Button>
                     <div className="flex items-center gap-1">
                       <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setRenaming({ id: t.id, name: t.name })}>
@@ -122,20 +122,20 @@ function TemplatesPage() {
 
       <Dialog open={!!renaming} onOpenChange={(o) => !o && setRenaming(null)}>
         <DialogContent>
-          <DialogHeader><DialogTitle>Rename template</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>Ubah nama template</DialogTitle></DialogHeader>
           <div className="space-y-2">
-            <Label>Name</Label>
+            <Label>Nama</Label>
             <Input value={renaming?.name ?? ""} onChange={(e) => setRenaming((r) => r && { ...r, name: e.target.value })} />
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setRenaming(null)}>Cancel</Button>
+            <Button variant="outline" onClick={() => setRenaming(null)}>Batal</Button>
             <Button onClick={() => {
               if (!renaming) return;
-              if (!renaming.name.trim()) return toast.error("Name required");
+              if (!renaming.name.trim()) return toast.error("Nama wajib diisi");
               renameTemplate(renaming.id, renaming.name.trim());
-              toast.success("Renamed");
+              toast.success("Nama diperbarui");
               setRenaming(null);
-            }}>Save</Button>
+            }}>Simpan</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -143,18 +143,18 @@ function TemplatesPage() {
       <AlertDialog open={!!deleting} onOpenChange={(o) => !o && setDeleting(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete this template?</AlertDialogTitle>
-            <AlertDialogDescription>This action can't be undone.</AlertDialogDescription>
+            <AlertDialogTitle>Hapus template ini?</AlertDialogTitle>
+            <AlertDialogDescription>Tindakan ini tidak dapat dibatalkan.</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Batal</AlertDialogCancel>
             <AlertDialogAction onClick={() => {
               if (deleting) {
                 deleteTemplate(deleting);
-                toast.success("Template deleted");
+                toast.success("Template dihapus");
               }
               setDeleting(null);
-            }}>Delete</AlertDialogAction>
+            }}>Hapus</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

@@ -13,21 +13,21 @@ export function SignatureSection() {
   return (
     <Card className="p-6 space-y-5">
       <div>
-        <h2 className="font-semibold text-lg">Signature</h2>
+        <h2 className="font-semibold text-lg">Tanda Tangan</h2>
         <p className="text-xs text-muted-foreground mt-0.5">
-          Names appear on the printed invoice. Optionally upload a signature image.
+          Nama akan muncul pada invoice cetak. Opsional unggah gambar tanda tangan.
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <SignatureBox
-          title="Person In Charge"
+          title="Penanggung Jawab"
           name={signature.picName}
           image={signature.picImage}
           onName={(v) => updateSignature({ picName: v })}
           onImage={(v) => updateSignature({ picImage: v })}
         />
         <SignatureBox
-          title="Employee Representative"
+          title="Perwakilan Pekerja"
           name={signature.repName}
           image={signature.repImage}
           onName={(v) => updateSignature({ repName: v })}
@@ -69,7 +69,7 @@ function SignatureBox({
             <button
               onClick={() => onImage(undefined)}
               className="absolute top-1 right-1 h-6 w-6 rounded-full bg-destructive text-destructive-foreground grid place-items-center hover:bg-destructive/90"
-              title="Remove"
+              title="Hapus"
             >
               <X className="h-3 w-3" />
             </button>
@@ -82,7 +82,7 @@ function SignatureBox({
             onClick={() => inputRef.current?.click()}
             className="text-muted-foreground"
           >
-            <Upload className="h-4 w-4" /> Upload signature
+            <Upload className="h-4 w-4" /> Unggah tanda tangan
           </Button>
         )}
         <input

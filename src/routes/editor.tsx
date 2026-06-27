@@ -71,20 +71,20 @@ function EditorPage() {
 
   const validateAndPrint = () => {
     if (!header.projectTitle.trim()) {
-      toast.error("Project title is required");
+      toast.error("Judul proyek wajib diisi");
       return;
     }
     if (!header.personInCharge.trim()) {
-      toast.error("Person in charge is required");
+      toast.error("Penanggung jawab wajib diisi");
       return;
     }
     if (employees.length === 0) {
-      toast.error("Add at least one employee");
+      toast.error("Tambahkan minimal satu karyawan");
       return;
     }
     const invalid = employees.some((e) => !e.name.trim() || e.workingDays <= 0);
     if (invalid) {
-      toast.error("Some rows are incomplete (name & working days)");
+      toast.error("Beberapa baris belum lengkap (nama & hari kerja)");
       return;
     }
     saveDraft();
@@ -93,7 +93,7 @@ function EditorPage() {
 
   const handleSave = () => {
     saveDraft();
-    toast.success("Draft saved locally");
+    toast.success("Draft tersimpan lokal");
   };
 
   const handleExport = () => {
@@ -112,9 +112,9 @@ function EditorPage() {
     try {
       const proj = await importProject(file);
       loadProject(proj);
-      toast.success("Project loaded");
+      toast.success("Proyek dimuat");
     } catch (err) {
-      toast.error("Invalid .payroll file", { description: (err as Error).message });
+      toast.error("File .payroll tidak valid", { description: (err as Error).message });
     }
   };
 
@@ -125,19 +125,19 @@ function EditorPage() {
         <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 sm:flex sm:flex-wrap sm:justify-between">
           <div className="min-w-0">
             <h1 className="text-2xl font-bold tracking-tight truncate">
-              {header.projectTitle || "Untitled Invoice"}
+              {header.projectTitle || "Invoice Tanpa Judul"}
             </h1>
             <p className="text-xs text-muted-foreground mt-0.5 font-mono">{header.invoiceNumber}</p>
           </div>
           <div className="flex flex-wrap items-center gap-2 shrink-0">
             <Button variant="outline" size="sm" onClick={() => setImportOpen(true)}>
-              <FileSpreadsheet className="h-4 w-4" /> Import Excel
+              <FileSpreadsheet className="h-4 w-4" /> Impor Excel
             </Button>
             <Button variant="outline" size="sm" onClick={() => setTplDialog(true)} disabled={employees.length === 0}>
-              <Layers className="h-4 w-4" /> Save as template
+              <Layers className="h-4 w-4" /> Simpan Template
             </Button>
             <Button variant="outline" size="sm" onClick={handleSave}>
-              <Save className="h-4 w-4" /> Save draft
+              <Save className="h-4 w-4" /> Simpan Draft
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -146,23 +146,23 @@ function EditorPage() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => { reset(); toast.success("Started a new invoice"); }}>
-                  <FilePlus className="h-4 w-4" /> New invoice
+                <DropdownMenuItem onClick={() => { reset(); toast.success("Invoice baru dimulai"); }}>
+                  <FilePlus className="h-4 w-4" /> Invoice Baru
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => fileInputRef.current?.click()}>
-                  <FolderOpen className="h-4 w-4" /> Open .payroll file
+                  <FolderOpen className="h-4 w-4" /> Buka file .payroll
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleExport}>
                   <Download className="h-4 w-4" /> Export .payroll
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => navigate({ to: "/drafts" })}>
-                  <Upload className="h-4 w-4" /> Open from drafts
+                  <Upload className="h-4 w-4" /> Buka dari Draft
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
             <Button size="sm" onClick={validateAndPrint}>
-              <Printer className="h-4 w-4" /> Preview & Print
+              <Printer className="h-4 w-4" /> Pratinjau & Cetak
             </Button>
           </div>
           <input
@@ -189,27 +189,27 @@ function EditorPage() {
       <Dialog open={tplDialog} onOpenChange={setTplDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Save worker list as template</DialogTitle>
+            <DialogTitle>Simpan daftar pekerja sebagai template</DialogTitle>
             <DialogDescription>
-              Stores names and default daily salaries (no working days or status).
+              Menyimpan nama dan upah harian default (tanpa hari kerja & status).
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-2">
-            <Label>Template name</Label>
-            <Input value={tplName} onChange={(e) => setTplName(e.target.value)} placeholder="e.g. Tukang Bangunan Cikarang" />
+            <Label>Nama template</Label>
+            <Input value={tplName} onChange={(e) => setTplName(e.target.value)} placeholder="cth. Tukang Bangunan Cikarang" />
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setTplDialog(false)}>Cancel</Button>
+            <Button variant="outline" onClick={() => setTplDialog(false)}>Batal</Button>
             <Button
               onClick={() => {
-                if (!tplName.trim()) return toast.error("Name required");
+                if (!tplName.trim()) return toast.error("Nama wajib diisi");
                 saveTemplate(tplName.trim());
-                toast.success("Template saved");
+                toast.success("Template tersimpan");
                 setTplName("");
                 setTplDialog(false);
               }}
             >
-              Save template
+              Simpan Template
             </Button>
           </DialogFooter>
         </DialogContent>

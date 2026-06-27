@@ -20,24 +20,24 @@ export function InvoiceHeaderForm() {
   return (
     <Card className="p-6 space-y-5">
       <div>
-        <h2 className="font-semibold text-lg">Invoice Details</h2>
-        <p className="text-xs text-muted-foreground mt-0.5">Header information shown on the printed invoice.</p>
+        <h2 className="font-semibold text-lg">Detail Invoice</h2>
+        <p className="text-xs text-muted-foreground mt-0.5">Informasi header yang tercetak pada invoice.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Field label="Project Title" required>
+        <Field label="Judul Proyek" required>
           <Input
             value={header.projectTitle}
             onChange={(e) => updateHeader({ projectTitle: e.target.value })}
-            placeholder="e.g. Renovasi Gudang Cikarang"
+            placeholder="cth. Renovasi Gudang Cikarang"
           />
         </Field>
 
-        <Field label="Invoice Number">
+        <Field label="Nomor Invoice">
           <Input value={header.invoiceNumber} readOnly className="bg-muted font-mono text-xs" />
         </Field>
 
-        <Field label="Payment Date">
+        <Field label="Tanggal Pembayaran">
           <Input
             type="date"
             value={header.paymentDate}
@@ -45,7 +45,7 @@ export function InvoiceHeaderForm() {
           />
         </Field>
 
-        <Field label="Person In Charge" required>
+        <Field label="Penanggung Jawab" required>
           <Input
             value={header.personInCharge}
             onChange={(e) => updateHeader({ personInCharge: e.target.value })}
@@ -53,7 +53,7 @@ export function InvoiceHeaderForm() {
           />
         </Field>
 
-        <Field label="Payment Method">
+        <Field label="Metode Pembayaran">
           <Select
             value={header.paymentMethod}
             onValueChange={(v) => setPaymentMethod(v as PaymentMethod)}
@@ -62,8 +62,8 @@ export function InvoiceHeaderForm() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="cash">Cash</SelectItem>
-              <SelectItem value="transfer">Transfer</SelectItem>
+              <SelectItem value="cash">Tunai</SelectItem>
+              <SelectItem value="transfer">Transfer Bank</SelectItem>
               <SelectItem value="ewallet">E-Wallet</SelectItem>
             </SelectContent>
           </Select>
@@ -72,14 +72,14 @@ export function InvoiceHeaderForm() {
 
       {header.paymentMethod === "transfer" && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-3 border-t">
-          <Field label="Bank Name">
+          <Field label="Nama Bank">
             <Input
               value={header.bankName ?? ""}
               onChange={(e) => updateHeader({ bankName: e.target.value })}
-              placeholder="e.g. BCA"
+              placeholder="cth. BCA"
             />
           </Field>
-          <Field label="Account Number">
+          <Field label="Nomor Rekening">
             <Input
               value={header.accountNumber ?? ""}
               onChange={(e) => updateHeader({ accountNumber: e.target.value.replace(/\D/g, "") })}
@@ -87,7 +87,7 @@ export function InvoiceHeaderForm() {
               inputMode="numeric"
             />
           </Field>
-          <Field label="Account Holder">
+          <Field label="Atas Nama">
             <Input
               value={header.accountHolder ?? ""}
               onChange={(e) => updateHeader({ accountHolder: e.target.value })}
@@ -97,7 +97,7 @@ export function InvoiceHeaderForm() {
         </div>
       )}
 
-      <Field label="Notes (optional)">
+      <Field label="Catatan (opsional)">
         <Textarea
           value={header.notes ?? ""}
           onChange={(e) => updateHeader({ notes: e.target.value })}

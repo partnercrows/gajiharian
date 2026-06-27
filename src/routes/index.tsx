@@ -33,30 +33,30 @@ function Dashboard() {
 
   const actions = [
     {
-      title: "Manual Input",
-      desc: "Add employees row-by-row. Best for small payrolls or one-offs.",
+      title: "Input Manual",
+      desc: "Tambahkan karyawan baris per baris. Cocok untuk payroll kecil atau satu kali.",
       icon: PenLine,
-      cta: "Start blank invoice",
+      cta: "Mulai invoice kosong",
       onClick: () => {
         reset();
         navigate({ to: "/editor" });
       },
     },
     {
-      title: "Import Excel",
-      desc: "Upload .xlsx or .csv. Download the template, fill it, and we'll parse it.",
+      title: "Impor Excel",
+      desc: "Unggah .xlsx atau .csv. Unduh template, isi, dan kami akan memprosesnya.",
       icon: FileSpreadsheet,
-      cta: "Import file",
+      cta: "Impor file",
       onClick: () => {
         reset();
         navigate({ to: "/editor", search: { import: true } as never });
       },
     },
     {
-      title: "Load Template",
-      desc: "Reuse a saved worker list with default daily salaries.",
+      title: "Muat Template",
+      desc: "Pakai ulang daftar pekerja yang tersimpan beserta upah harian default.",
       icon: Layers,
-      cta: "Browse templates",
+      cta: "Lihat template",
       onClick: () => navigate({ to: "/templates" }),
     },
   ];
@@ -67,14 +67,14 @@ function Dashboard() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Selamat datang 👋</h1>
           <p className="text-muted-foreground mt-1.5">
-            Pick how you want to start a new payroll invoice today.
+            Pilih cara memulai invoice payroll hari ini.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <StatCard icon={Wallet} label="Current invoice total" value={formatRupiah(grandTotal(employees))} />
-          <StatCard icon={Users} label="Employees in editor" value={String(employees.length)} />
-          <StatCard icon={Clock} label="Saved drafts" value={String(drafts.length)} />
+          <StatCard icon={Wallet} label="Total invoice saat ini" value={formatRupiah(grandTotal(employees))} />
+          <StatCard icon={Users} label="Karyawan di editor" value={String(employees.length)} />
+          <StatCard icon={Clock} label="Draft tersimpan" value={String(drafts.length)} />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -100,20 +100,20 @@ function Dashboard() {
         <div className="grid md:grid-cols-2 gap-5">
           <Card className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold">Recent drafts</h3>
+              <h3 className="font-semibold">Draft terbaru</h3>
               <Link to="/drafts" className="text-xs text-primary hover:underline">
-                View all
+                Lihat semua
               </Link>
             </div>
             {drafts.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No drafts yet. Auto-save kicks in every 30s.</p>
+              <p className="text-sm text-muted-foreground">Belum ada draft. Auto-save berjalan setiap 30 detik.</p>
             ) : (
               <ul className="space-y-2">
                 {drafts.slice(0, 5).map((d) => (
                   <li key={d.id} className="flex items-center justify-between gap-3 text-sm py-2 border-b last:border-0">
                     <div className="min-w-0">
-                      <div className="font-medium truncate">{d.header.projectTitle || "Untitled project"}</div>
-                      <div className="text-xs text-muted-foreground">{d.employees.length} employees · {d.header.invoiceNumber}</div>
+                      <div className="font-medium truncate">{d.header.projectTitle || "Proyek tanpa judul"}</div>
+                      <div className="text-xs text-muted-foreground">{d.employees.length} karyawan · {d.header.invoiceNumber}</div>
                     </div>
                     <span className="text-xs font-medium shrink-0">{formatRupiah(grandTotal(d.employees))}</span>
                   </li>
@@ -124,17 +124,17 @@ function Dashboard() {
 
           <Card className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold">Worker templates</h3>
-              <Link to="/templates" className="text-xs text-primary hover:underline">Manage</Link>
+              <h3 className="font-semibold">Template pekerja</h3>
+              <Link to="/templates" className="text-xs text-primary hover:underline">Kelola</Link>
             </div>
             {templates.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No templates yet. Save your current worker list as a template from the editor.</p>
+              <p className="text-sm text-muted-foreground">Belum ada template. Simpan daftar pekerja dari editor sebagai template.</p>
             ) : (
               <ul className="space-y-2">
                 {templates.slice(0, 5).map((t) => (
                   <li key={t.id} className="flex items-center justify-between text-sm py-2 border-b last:border-0">
                     <span className="font-medium truncate">{t.name}</span>
-                    <span className="text-xs text-muted-foreground shrink-0">{t.workers.length} workers</span>
+                    <span className="text-xs text-muted-foreground shrink-0">{t.workers.length} pekerja</span>
                   </li>
                 ))}
               </ul>

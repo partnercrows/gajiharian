@@ -10,9 +10,9 @@ export function PayrollSummary() {
   const paid = employees.filter((e) => e.status === "paid").length;
 
   const items = [
-    { label: "Total Employees", value: formatNumber(employees.length), sub: `${paid} marked paid`, icon: Users },
-    { label: "Total Working Days", value: formatNumber(days), sub: "across all rows", icon: CalendarDays },
-    { label: "Grand Total Salary", value: formatRupiah(total), sub: "auto-calculated", icon: Wallet, highlight: true },
+    { label: "Total Karyawan", value: formatNumber(employees.length), sub: `${paid} sudah lunas`, icon: Users },
+    { label: "Total Hari Kerja", value: formatNumber(days), sub: "seluruh baris", icon: CalendarDays },
+    { label: "Total Pembayaran", value: formatRupiah(total), sub: "dihitung otomatis", icon: Wallet, highlight: true },
   ];
 
   return (

@@ -40,38 +40,38 @@ function DraftsPage() {
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Draft Projects</h1>
-            <p className="text-muted-foreground text-sm mt-1">Auto-saved every 30 seconds. Stored only on this device.</p>
+            <h1 className="text-2xl font-bold tracking-tight">Draft Proyek</h1>
+            <p className="text-muted-foreground text-sm mt-1">Tersimpan otomatis tiap 30 detik. Hanya disimpan di perangkat ini.</p>
           </div>
           <Button onClick={() => navigate({ to: "/editor" })}>
-            <FilePlus className="h-4 w-4" /> New invoice
+            <FilePlus className="h-4 w-4" /> Invoice Baru
           </Button>
         </div>
 
         {drafts.length === 0 ? (
           <Card className="p-16 text-center">
             <FolderOpen className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
-            <p className="font-medium">No drafts saved yet</p>
-            <p className="text-sm text-muted-foreground mt-1">Start an invoice and your work auto-saves here.</p>
+            <p className="font-medium">Belum ada draft tersimpan</p>
+            <p className="text-sm text-muted-foreground mt-1">Mulai invoice dan pekerjaan Anda akan tersimpan otomatis di sini.</p>
           </Card>
         ) : (
           <Card className="overflow-hidden">
             <table className="w-full text-sm">
               <thead className="bg-muted/60">
                 <tr className="text-left text-xs uppercase tracking-wide text-muted-foreground">
-                  <th className="px-4 py-3">Project</th>
-                  <th className="px-4 py-3">Invoice #</th>
-                  <th className="px-4 py-3">Date</th>
-                  <th className="px-4 py-3 text-right">Workers</th>
+                  <th className="px-4 py-3">Proyek</th>
+                  <th className="px-4 py-3">No. Invoice</th>
+                  <th className="px-4 py-3">Tanggal</th>
+                  <th className="px-4 py-3 text-right">Pekerja</th>
                   <th className="px-4 py-3 text-right">Total</th>
-                  <th className="px-4 py-3 text-right">Updated</th>
+                  <th className="px-4 py-3 text-right">Diperbarui</th>
                   <th className="px-4 py-3" />
                 </tr>
               </thead>
               <tbody>
                 {drafts.map((d) => (
                   <tr key={d.id} className="border-t hover:bg-muted/30">
-                    <td className="px-4 py-3 font-medium">{d.header.projectTitle || "Untitled"}</td>
+                    <td className="px-4 py-3 font-medium">{d.header.projectTitle || "Tanpa Judul"}</td>
                     <td className="px-4 py-3 font-mono text-xs">{d.header.invoiceNumber}</td>
                     <td className="px-4 py-3">{formatDateID(d.header.paymentDate)}</td>
                     <td className="px-4 py-3 text-right tabular-nums">{d.employees.length}</td>
@@ -86,11 +86,11 @@ function DraftsPage() {
                           size="sm"
                           onClick={() => {
                             loadProject(d);
-                            toast.success("Draft loaded");
+                            toast.success("Draft dimuat");
                             navigate({ to: "/editor" });
                           }}
                         >
-                          <ExternalLink className="h-4 w-4" /> Open
+                          <ExternalLink className="h-4 w-4" /> Buka
                         </Button>
                         <Button
                           variant="ghost"
@@ -113,15 +113,15 @@ function DraftsPage() {
       <AlertDialog open={!!del} onOpenChange={(o) => !o && setDel(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete this draft?</AlertDialogTitle>
-            <AlertDialogDescription>This action can't be undone.</AlertDialogDescription>
+            <AlertDialogTitle>Hapus draft ini?</AlertDialogTitle>
+            <AlertDialogDescription>Tindakan ini tidak dapat dibatalkan.</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Batal</AlertDialogCancel>
             <AlertDialogAction onClick={() => {
-              if (del) { deleteDraft(del); toast.success("Draft deleted"); }
+              if (del) { deleteDraft(del); toast.success("Draft dihapus"); }
               setDel(null);
-            }}>Delete</AlertDialogAction>
+            }}>Hapus</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

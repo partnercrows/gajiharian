@@ -12,11 +12,11 @@ import { useInvoiceStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 const nav = [
-  { to: "/", label: "Dashboard", icon: LayoutDashboard, exact: true },
-  { to: "/editor", label: "Invoice Editor", icon: FileText, exact: false },
-  { to: "/drafts", label: "Draft Projects", icon: FolderOpen, exact: false },
-  { to: "/templates", label: "Templates", icon: Layers, exact: false },
-  { to: "/settings", label: "Settings", icon: SettingsIcon, exact: false },
+  { to: "/", label: "Dasbor", icon: LayoutDashboard, exact: true },
+  { to: "/editor", label: "Editor Gaji", icon: FileText, exact: false },
+  { to: "/drafts", label: "Draft Proyek", icon: FolderOpen, exact: false },
+  { to: "/templates", label: "Template", icon: Layers, exact: false },
+  { to: "/settings", label: "Pengaturan", icon: SettingsIcon, exact: false },
 ] as const;
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
@@ -64,7 +64,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           })}
         </nav>
         <div className="px-5 py-4 text-[11px] text-sidebar-foreground/50 border-t border-sidebar-border">
-          v1.0 · 100% local data
+          v1.0 · 100% data lokal
         </div>
       </aside>
 
@@ -77,7 +77,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <span className="inline-flex h-2 w-2 rounded-full bg-success" />
-            All changes saved locally
+            Semua perubahan tersimpan lokal
           </div>
         </header>
         <main className="flex-1 overflow-auto">{children}</main>
