@@ -9,8 +9,8 @@ import { formatRupiah, formatDateID, formatNumber } from "@/lib/format";
 export const Route = createFileRoute("/print")({
   head: () => ({
     meta: [
-      { title: "Print Preview — Gajian Harianku" },
-      { name: "description", content: "A4 portrait print preview of the payroll invoice." },
+      { title: "Pratinjau Cetak — Gajian Harianku" },
+      { name: "description", content: "Pratinjau cetak A4 portrait invoice payroll." },
     ],
   }),
   component: PrintPage,
