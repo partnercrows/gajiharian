@@ -13,21 +13,21 @@ export function SignatureSection() {
   return (
     <Card className="p-6 space-y-5">
       <div>
-        <h2 className="font-semibold text-lg">Signature</h2>
+        <h2 className="font-semibold text-lg">Tanda Tangan</h2>
         <p className="text-xs text-muted-foreground mt-0.5">
-          Names appear on the printed invoice. Optionally upload a signature image.
+          Nama akan muncul pada invoice cetak. Opsional unggah gambar tanda tangan.
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <SignatureBox
-          title="Person In Charge"
+          title="Penanggung Jawab"
           name={signature.picName}
           image={signature.picImage}
           onName={(v) => updateSignature({ picName: v })}
           onImage={(v) => updateSignature({ picImage: v })}
         />
         <SignatureBox
-          title="Employee Representative"
+          title="Perwakilan Pekerja"
           name={signature.repName}
           image={signature.repImage}
           onName={(v) => updateSignature({ repName: v })}
