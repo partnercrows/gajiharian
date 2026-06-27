@@ -34,7 +34,7 @@ export function ExcelImportDialog({ open, onOpenChange }: Props) {
       const res = await parseSpreadsheet(file);
       setResult(res);
     } catch (err) {
-      toast.error("Failed to parse file", { description: (err as Error).message });
+      toast.error("Gagal membaca file", { description: (err as Error).message });
     } finally {
       setBusy(false);
     }
@@ -44,7 +44,7 @@ export function ExcelImportDialog({ open, onOpenChange }: Props) {
     if (!result) return;
     const next = mode === "replace" ? result.imported : [...employees, ...result.imported];
     setEmployees(next);
-    toast.success(`${result.imported.length} rows imported`);
+    toast.success(`${result.imported.length} baris diimpor`);
     setResult(null);
     onOpenChange(false);
   };
