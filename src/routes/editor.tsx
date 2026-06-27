@@ -125,19 +125,19 @@ function EditorPage() {
         <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 sm:flex sm:flex-wrap sm:justify-between">
           <div className="min-w-0">
             <h1 className="text-2xl font-bold tracking-tight truncate">
-              {header.projectTitle || "Untitled Invoice"}
+              {header.projectTitle || "Invoice Tanpa Judul"}
             </h1>
             <p className="text-xs text-muted-foreground mt-0.5 font-mono">{header.invoiceNumber}</p>
           </div>
           <div className="flex flex-wrap items-center gap-2 shrink-0">
             <Button variant="outline" size="sm" onClick={() => setImportOpen(true)}>
-              <FileSpreadsheet className="h-4 w-4" /> Import Excel
+              <FileSpreadsheet className="h-4 w-4" /> Impor Excel
             </Button>
             <Button variant="outline" size="sm" onClick={() => setTplDialog(true)} disabled={employees.length === 0}>
-              <Layers className="h-4 w-4" /> Save as template
+              <Layers className="h-4 w-4" /> Simpan Template
             </Button>
             <Button variant="outline" size="sm" onClick={handleSave}>
-              <Save className="h-4 w-4" /> Save draft
+              <Save className="h-4 w-4" /> Simpan Draft
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -146,23 +146,23 @@ function EditorPage() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => { reset(); toast.success("Started a new invoice"); }}>
-                  <FilePlus className="h-4 w-4" /> New invoice
+                <DropdownMenuItem onClick={() => { reset(); toast.success("Invoice baru dimulai"); }}>
+                  <FilePlus className="h-4 w-4" /> Invoice Baru
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => fileInputRef.current?.click()}>
-                  <FolderOpen className="h-4 w-4" /> Open .payroll file
+                  <FolderOpen className="h-4 w-4" /> Buka file .payroll
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleExport}>
                   <Download className="h-4 w-4" /> Export .payroll
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => navigate({ to: "/drafts" })}>
-                  <Upload className="h-4 w-4" /> Open from drafts
+                  <Upload className="h-4 w-4" /> Buka dari Draft
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
             <Button size="sm" onClick={validateAndPrint}>
-              <Printer className="h-4 w-4" /> Preview & Print
+              <Printer className="h-4 w-4" /> Pratinjau & Cetak
             </Button>
           </div>
           <input
