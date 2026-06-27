@@ -189,27 +189,27 @@ function EditorPage() {
       <Dialog open={tplDialog} onOpenChange={setTplDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Save worker list as template</DialogTitle>
+            <DialogTitle>Simpan daftar pekerja sebagai template</DialogTitle>
             <DialogDescription>
-              Stores names and default daily salaries (no working days or status).
+              Menyimpan nama dan upah harian default (tanpa hari kerja & status).
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-2">
-            <Label>Template name</Label>
-            <Input value={tplName} onChange={(e) => setTplName(e.target.value)} placeholder="e.g. Tukang Bangunan Cikarang" />
+            <Label>Nama template</Label>
+            <Input value={tplName} onChange={(e) => setTplName(e.target.value)} placeholder="cth. Tukang Bangunan Cikarang" />
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setTplDialog(false)}>Cancel</Button>
+            <Button variant="outline" onClick={() => setTplDialog(false)}>Batal</Button>
             <Button
               onClick={() => {
-                if (!tplName.trim()) return toast.error("Name required");
+                if (!tplName.trim()) return toast.error("Nama wajib diisi");
                 saveTemplate(tplName.trim());
-                toast.success("Template saved");
+                toast.success("Template tersimpan");
                 setTplName("");
                 setTplDialog(false);
               }}
             >
-              Save template
+              Simpan Template
             </Button>
           </DialogFooter>
         </DialogContent>
