@@ -1,9 +1,12 @@
-import { Plus, Copy, Trash2, Eraser } from "lucide-react";
+import { useState } from "react";
+import { Plus, Copy, Trash2, Eraser, FileText } from "lucide-react";
 import { useInvoiceStore, totalForEmployee } from "@/lib/store";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { CurrencyInput } from "@/components/CurrencyInput";
+import { SlipGajiDialog } from "@/components/SlipGajiDialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,6 +20,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { formatRupiah } from "@/lib/format";
 import { cn } from "@/lib/utils";
+import type { Employee } from "@/lib/types";
 
 export function PayrollTable() {
   const employees = useInvoiceStore((s) => s.employees);
@@ -27,13 +31,15 @@ export function PayrollTable() {
   const clearEmployees = useInvoiceStore((s) => s.clearEmployees);
   const setStatus = useInvoiceStore((s) => s.setStatus);
 
+  const [slipFor, setSlipFor] = useState<Employee | null>(null);
+
   return (
     <Card className="overflow-hidden">
       <div className="flex items-center justify-between gap-3 px-6 py-4 border-b">
         <div className="min-w-0">
-          <h2 className="font-semibold text-lg">Payroll</h2>
+          <h2 className="font-semibold text-lg">Daftar Karyawan</h2>
           <p className="text-xs text-muted-foreground">
-            {employees.length} {employees.length === 1 ? "employee" : "employees"} · totals recalculate live
+            {employees.length} karyawan · total dihitung otomatis
           </p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
@@ -41,25 +47,25 @@ export function PayrollTable() {
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button variant="outline" size="sm">
-                  <Eraser className="h-4 w-4" /> Clear all
+                  <Eraser className="h-4 w-4" /> Hapus Semua
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Clear all employees?</AlertDialogTitle>
+                  <AlertDialogTitle>Hapus semua karyawan?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This removes every row from the payroll table. You can't undo this action.
+                    Semua baris akan dihapus dari tabel. Tindakan ini tidak bisa dibatalkan.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={clearEmployees}>Clear all</AlertDialogAction>
+                  <AlertDialogCancel>Batal</AlertDialogCancel>
+                  <AlertDialogAction onClick={clearEmployees}>Hapus Semua</AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
           )}
           <Button size="sm" onClick={() => addEmployee()}>
-            <Plus className="h-4 w-4" /> Add row
+            <Plus className="h-4 w-4" /> Tambah Baris
           </Button>
         </div>
       </div>
@@ -69,12 +75,12 @@ export function PayrollTable() {
           <thead className="sticky top-0 bg-muted/80 backdrop-blur z-10">
             <tr className="text-left text-xs uppercase tracking-wide text-muted-foreground">
               <th className="w-10 px-4 py-3">#</th>
-              <th className="px-3 py-3 min-w-[200px]">Employee Name</th>
-              <th className="px-3 py-3 w-[160px]">Daily Salary</th>
-              <th className="px-3 py-3 w-[110px]">Days</th>
+              <th className="px-3 py-3 min-w-[200px]">Nama Karyawan</th>
+              <th className="px-3 py-3 w-[170px]">Upah per Hari</th>
+              <th className="px-3 py-3 w-[110px]">Hari</th>
               <th className="px-3 py-3 w-[160px] text-right">Total</th>
               <th className="px-3 py-3 w-[130px]">Status</th>
-              <th className="px-3 py-3 w-[110px] text-right">Actions</th>
+              <th className="px-3 py-3 w-[150px] text-right">Aksi</th>
             </tr>
           </thead>
           <tbody>
@@ -82,9 +88,9 @@ export function PayrollTable() {
               <tr>
                 <td colSpan={7} className="text-center py-12 text-muted-foreground">
                   <div className="space-y-2">
-                    <p>No employees yet.</p>
+                    <p>Belum ada karyawan.</p>
                     <Button variant="outline" size="sm" onClick={() => addEmployee()}>
-                      <Plus className="h-4 w-4" /> Add first row
+                      <Plus className="h-4 w-4" /> Tambah baris pertama
                     </Button>
                   </div>
                 </td>
@@ -102,14 +108,11 @@ export function PayrollTable() {
                     />
                   </td>
                   <td className="px-3 py-2">
-                    <Input
-                      type="number"
-                      min={0}
-                      step={1000}
-                      value={e.dailySalary || ""}
-                      onChange={(ev) => updateEmployee(e.id, { dailySalary: Math.max(0, Number(ev.target.value) || 0) })}
-                      className="h-9 text-right tabular-nums"
+                    <CurrencyInput
+                      value={e.dailySalary}
+                      onValueChange={(n) => updateEmployee(e.id, { dailySalary: n })}
                       placeholder="0"
+                      className="h-9 text-right"
                     />
                   </td>
                   <td className="px-3 py-2">
@@ -133,7 +136,7 @@ export function PayrollTable() {
                     <button
                       onClick={() => setStatus(e.id, e.status === "paid" ? "unpaid" : "paid")}
                       className="inline-block"
-                      title="Click to toggle"
+                      title="Klik untuk mengubah"
                     >
                       <Badge
                         className={cn(
@@ -143,7 +146,7 @@ export function PayrollTable() {
                             : "bg-warning text-warning-foreground hover:bg-warning/90",
                         )}
                       >
-                        {e.status === "paid" ? "Paid" : "Unpaid"}
+                        {e.status === "paid" ? "Lunas" : "Belum Lunas"}
                       </Badge>
                     </button>
                   </td>
@@ -152,9 +155,18 @@ export function PayrollTable() {
                       <Button
                         variant="ghost"
                         size="icon"
+                        className="h-8 w-8 text-primary hover:text-primary"
+                        onClick={() => setSlipFor(e)}
+                        title="Lihat Slip Gaji"
+                      >
+                        <FileText className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
                         className="h-8 w-8"
                         onClick={() => duplicateEmployee(e.id)}
-                        title="Duplicate row"
+                        title="Duplikat baris"
                       >
                         <Copy className="h-4 w-4" />
                       </Button>
@@ -163,7 +175,7 @@ export function PayrollTable() {
                         size="icon"
                         className="h-8 w-8 text-destructive hover:text-destructive"
                         onClick={() => removeEmployee(e.id)}
-                        title="Delete row"
+                        title="Hapus baris"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -175,6 +187,12 @@ export function PayrollTable() {
           </tbody>
         </table>
       </div>
+
+      <SlipGajiDialog
+        employee={slipFor}
+        open={!!slipFor}
+        onOpenChange={(o) => !o && setSlipFor(null)}
+      />
     </Card>
   );
 }
