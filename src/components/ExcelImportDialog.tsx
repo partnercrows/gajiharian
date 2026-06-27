@@ -53,18 +53,18 @@ export function ExcelImportDialog({ open, onOpenChange }: Props) {
     <Dialog open={open} onOpenChange={(o) => { onOpenChange(o); if (!o) setResult(null); }}>
       <DialogContent className="sm:max-w-xl">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2"><FileSpreadsheet className="h-5 w-5 text-primary" /> Import from Excel</DialogTitle>
+          <DialogTitle className="flex items-center gap-2"><FileSpreadsheet className="h-5 w-5 text-primary" /> Impor dari Excel</DialogTitle>
           <DialogDescription>
-            Upload an .xlsx or .csv file. Columns: <b>Employee Name</b>, <b>Daily Salary</b>, <b>Working Days</b>.
+            Unggah file .xlsx atau .csv. Kolom: <b>Nama Karyawan</b>, <b>Upah Harian</b>, <b>Hari Kerja</b>.
           </DialogDescription>
         </DialogHeader>
 
         {!result && (
           <div className="space-y-4">
             <div className="flex items-center justify-between p-3 rounded-md bg-muted/60 text-sm">
-              <span>Don't have a file yet?</span>
+              <span>Belum punya file?</span>
               <Button size="sm" variant="outline" onClick={downloadTemplateXlsx}>
-                <FileDown className="h-4 w-4" /> Download template
+                <FileDown className="h-4 w-4" /> Unduh template
               </Button>
             </div>
 
@@ -84,8 +84,8 @@ export function ExcelImportDialog({ open, onOpenChange }: Props) {
               )}
             >
               <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-3" />
-              <p className="text-sm font-medium">Drop your file here, or click to browse</p>
-              <p className="text-xs text-muted-foreground mt-1">.xlsx or .csv up to ~5MB</p>
+              <p className="text-sm font-medium">Letakkan file di sini, atau klik untuk memilih</p>
+              <p className="text-xs text-muted-foreground mt-1">.xlsx atau .csv hingga ~5MB</p>
               <input
                 ref={inputRef}
                 type="file"
@@ -98,7 +98,7 @@ export function ExcelImportDialog({ open, onOpenChange }: Props) {
                 }}
               />
             </div>
-            {busy && <p className="text-sm text-muted-foreground text-center">Parsing…</p>}
+            {busy && <p className="text-sm text-muted-foreground text-center">Memproses…</p>}
           </div>
         )}
 
