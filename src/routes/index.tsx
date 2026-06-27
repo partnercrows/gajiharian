@@ -33,30 +33,30 @@ function Dashboard() {
 
   const actions = [
     {
-      title: "Manual Input",
-      desc: "Add employees row-by-row. Best for small payrolls or one-offs.",
+      title: "Input Manual",
+      desc: "Tambahkan karyawan baris per baris. Cocok untuk payroll kecil atau satu kali.",
       icon: PenLine,
-      cta: "Start blank invoice",
+      cta: "Mulai invoice kosong",
       onClick: () => {
         reset();
         navigate({ to: "/editor" });
       },
     },
     {
-      title: "Import Excel",
-      desc: "Upload .xlsx or .csv. Download the template, fill it, and we'll parse it.",
+      title: "Impor Excel",
+      desc: "Unggah .xlsx atau .csv. Unduh template, isi, dan kami akan memprosesnya.",
       icon: FileSpreadsheet,
-      cta: "Import file",
+      cta: "Impor file",
       onClick: () => {
         reset();
         navigate({ to: "/editor", search: { import: true } as never });
       },
     },
     {
-      title: "Load Template",
-      desc: "Reuse a saved worker list with default daily salaries.",
+      title: "Muat Template",
+      desc: "Pakai ulang daftar pekerja yang tersimpan beserta upah harian default.",
       icon: Layers,
-      cta: "Browse templates",
+      cta: "Lihat template",
       onClick: () => navigate({ to: "/templates" }),
     },
   ];
