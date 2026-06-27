@@ -97,7 +97,7 @@ export function InvoiceHeaderForm() {
         </div>
       )}
 
-      <Field label="Notes (optional)">
+      <Field label="Catatan (opsional)">
         <Textarea
           value={header.notes ?? ""}
           onChange={(e) => updateHeader({ notes: e.target.value })}
