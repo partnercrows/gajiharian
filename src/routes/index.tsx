@@ -67,14 +67,14 @@ function Dashboard() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Selamat datang 👋</h1>
           <p className="text-muted-foreground mt-1.5">
-            Pick how you want to start a new payroll invoice today.
+            Pilih cara memulai invoice payroll hari ini.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <StatCard icon={Wallet} label="Current invoice total" value={formatRupiah(grandTotal(employees))} />
-          <StatCard icon={Users} label="Employees in editor" value={String(employees.length)} />
-          <StatCard icon={Clock} label="Saved drafts" value={String(drafts.length)} />
+          <StatCard icon={Wallet} label="Total invoice saat ini" value={formatRupiah(grandTotal(employees))} />
+          <StatCard icon={Users} label="Karyawan di editor" value={String(employees.length)} />
+          <StatCard icon={Clock} label="Draft tersimpan" value={String(drafts.length)} />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
