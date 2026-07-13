@@ -6,7 +6,9 @@ export interface Employee {
   name: string;
   dailySalary: number;
   workingDays: number;
+  kasbon?: number;
   status: PaymentStatus;
+  catatan?: string; // free text, one line per point
 }
 
 export interface InvoiceHeader {
@@ -19,6 +21,9 @@ export interface InvoiceHeader {
   accountNumber?: string;
   accountHolder?: string;
   notes?: string;
+  periodStartDate?: string; // ISO date
+  periodEndDate?: string; // ISO date
+  autoCalculatePeriod?: boolean;
 }
 
 export interface SignatureInfo {
@@ -26,6 +31,13 @@ export interface SignatureInfo {
   picImage?: string; // dataURL
   repName: string;
   repImage?: string; // dataURL
+}
+
+export interface CompanySettings {
+  companyName: string;
+  companyAddress: string;
+  companyPhone?: string;
+  companyLogo?: string;
 }
 
 export interface InvoiceProject {
@@ -43,6 +55,8 @@ export interface WorkerTemplate {
   workers: Array<{
     name: string;
     dailySalary: number;
+    kasbon?: number;
+    workingDays?: number;
   }>;
   createdAt: number;
 }

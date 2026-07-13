@@ -10,12 +10,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { format } from "date-fns";
 import type { PaymentMethod } from "@/lib/types";
+import type { DateRange } from "react-day-picker";
+import { DateRangePicker } from "@/components/DateRangePicker";
+import { useMemo } from "react";
 
 export function InvoiceHeaderForm() {
   const header = useInvoiceStore((s) => s.header);
   const updateHeader = useInvoiceStore((s) => s.updateHeader);
   const setPaymentMethod = useInvoiceStore((s) => s.setPaymentMethod);
+
+  const periodDays = useMemo(() => {
+    if (header.periodStartDate && header.periodEndDate) {
+      const start = new Date(header.periodStartDate);
+      const end = new Date(header.periodEndDate);
+      const diff = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+      return diff > 0 ? diff : null;
+    }
+    return null;
+  }, [header.autoCalculatePeriod, header.periodStartDate, header.periodEndDate]);
 
   return (
     <Card className="p-6 space-y-5">
@@ -34,7 +48,7 @@ export function InvoiceHeaderForm() {
         </Field>
 
         <Field label="Nomor Invoice">
-          <Input value={header.invoiceNumber} readOnly className="bg-muted font-mono text-xs" />
+          <Input value={header.invoiceNumber} onChange={(e) => updateHeader({ invoiceNumber: e.target.value })} className="font-mono text-xs" placeholder="cth: INV/GH/20260627/8860" />
         </Field>
 
         <Field label="Tanggal Pembayaran">
@@ -97,7 +111,21 @@ export function InvoiceHeaderForm() {
         </div>
       )}
 
-      <Field label="Catatan (opsional)">
+      <Field label="Periode Penggajian (opsional)">
+          <DateRangePicker
+            value={header.periodStartDate && header.periodEndDate ? { from: new Date(header.periodStartDate), to: new Date(header.periodEndDate) } : header.periodStartDate ? { from: new Date(header.periodStartDate), to: undefined } : undefined}
+            onChange={(range) => {
+              updateHeader({
+                periodStartDate: range?.from ? format(range.from, "yyyy-MM-dd") : undefined,
+                periodEndDate: range?.to ? format(range.to, "yyyy-MM-dd") : undefined,
+              });
+            }}
+            placeholder="Pilih rentang tanggal periode"
+          />
+          {periodDays !== null && <p className="text-xs text-muted-foreground mt-1">{periodDays} hari</p>}
+        </Field>
+
+        <Field label="Catatan (opsional)">
         <Textarea
           value={header.notes ?? ""}
           onChange={(e) => updateHeader({ notes: e.target.value })}

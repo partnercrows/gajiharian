@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useMemo } from "react";
 import { useReactToPrint } from "react-to-print";
 import { Printer, Download, Wallet } from "lucide-react";
 import {
@@ -23,8 +23,22 @@ export function SlipGajiDialog({ employee, open, onOpenChange }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const header = useInvoiceStore((s) => s.header);
   const signature = useInvoiceStore((s) => s.signature);
+  const employees = useInvoiceStore((s) => s.employees);
   const companyName = useInvoiceStore((s) => s.companyName);
   const companyAddress = useInvoiceStore((s) => s.companyAddress);
+  const companyLogo = useInvoiceStore((s) => s.companyLogo);
+
+  const childIdx = useMemo(() => {
+    if (!employee) return 0;
+    return employees.findIndex((e) => e.id === employee.id);
+  }, [employee, employees]);
+
+  const periodLabel = useMemo(() => {
+    if (header.periodStartDate && header.periodEndDate) {
+      return `${formatDateID(header.periodStartDate)} - ${formatDateID(header.periodEndDate)}`;
+    }
+    return null;
+  }, [header.periodStartDate, header.periodEndDate]);
 
   const handlePrint = useReactToPrint({
     contentRef: ref,
@@ -35,6 +49,10 @@ export function SlipGajiDialog({ employee, open, onOpenChange }: Props) {
 
   if (!employee) return null;
   const total = totalForEmployee(employee);
+  const employeeNotes = (employee.catatan ?? "")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
   const paymentLabel = { cash: "Tunai", transfer: "Transfer Bank", ewallet: "E-Wallet" }[
     header.paymentMethod
   ];
@@ -57,8 +75,8 @@ export function SlipGajiDialog({ employee, open, onOpenChange }: Props) {
           {/* Header */}
           <div className="flex items-start justify-between gap-4 pb-4 border-b-2 border-[var(--color-primary)]">
             <div className="flex items-center gap-3 min-w-0">
-              <div className="grid place-items-center h-11 w-11 rounded-md bg-[var(--color-primary)] text-white shrink-0">
-                <Wallet className="h-5 w-5" />
+              <div className="grid place-items-center h-11 w-11 rounded-md bg-[var(--color-primary)] text-white shrink-0 overflow-hidden">
+                {companyLogo ? <img src={companyLogo} alt="Logo" className="h-full w-full object-contain" /> : <Wallet className="h-5 w-5" />}
               </div>
               <div className="min-w-0">
                 <div className="text-lg font-bold truncate">{companyName}</div>
@@ -72,7 +90,7 @@ export function SlipGajiDialog({ employee, open, onOpenChange }: Props) {
                 Slip Gaji
               </div>
               <div className="text-[11px] font-mono mt-0.5">
-                {header.invoiceNumber}/{employee.id.slice(0, 6).toUpperCase()}
+                {header.invoiceNumber}-{String(childIdx + 1).padStart(3, "0")}
               </div>
             </div>
           </div>
@@ -84,7 +102,8 @@ export function SlipGajiDialog({ employee, open, onOpenChange }: Props) {
                 Nama Karyawan
               </div>
               <div className="font-semibold text-base">{employee.name || "—"}</div>
-              <div className="text-[10px] uppercase tracking-wide text-gray-500 mt-3 mb-1">
+              {periodLabel && (<><div className="text-[10px] uppercase tracking-wide text-gray-500 mt-3 mb-1">Periode</div><div className="text-xs">{periodLabel}</div></>)}
+            <div className="text-[10px] uppercase tracking-wide text-gray-500 mt-3 mb-1">
                 Proyek
               </div>
               <div className="font-medium">{header.projectTitle || "—"}</div>
@@ -121,6 +140,16 @@ export function SlipGajiDialog({ employee, open, onOpenChange }: Props) {
                 <td className="px-3 py-2 text-right tabular-nums">{employee.workingDays} hari</td>
               </tr>
               <tr className="border-b border-gray-200">
+                <td className="px-3 py-2">Total Sebelum Potongan</td>
+                <td className="px-3 py-2 text-right tabular-nums">
+                  {formatRupiah((Number(employee.dailySalary) || 0) * (Number(employee.workingDays) || 0))}
+                </td>
+              </tr>
+              <tr className="border-b border-gray-200">
+                <td className="px-3 py-2">Kasbon / Potongan</td>
+                <td className="px-3 py-2 text-right tabular-nums">{employee.kasbon ? formatRupiah(employee.kasbon) : "Rp 0"}</td>
+              </tr>
+              <tr className="border-b border-gray-200">
                 <td className="px-3 py-2">Status Pembayaran</td>
                 <td className="px-3 py-2 text-right uppercase text-xs font-semibold">
                   <span
@@ -135,13 +164,26 @@ export function SlipGajiDialog({ employee, open, onOpenChange }: Props) {
             </tbody>
             <tfoot>
               <tr className="bg-[var(--color-primary)] text-white">
-                <td className="px-3 py-2.5 uppercase tracking-wide text-xs">Total Diterima</td>
+                <td className="px-3 py-2.5 uppercase tracking-wide text-xs">{employee.kasbon ? "Total Diterima" : "Total Diterima"}</td>
                 <td className="px-3 py-2.5 text-right text-base font-bold tabular-nums">
                   {formatRupiah(total)}
                 </td>
               </tr>
             </tfoot>
           </table>
+
+          {employeeNotes.length > 0 && (
+            <div className="mt-5 p-3 border-l-4 border-amber-500 bg-amber-50 text-xs">
+              <div className="font-semibold uppercase tracking-wide text-[10px] text-gray-500 mb-1">
+                Catatan Karyawan
+              </div>
+              <ul className="list-disc pl-4 space-y-0.5">
+                {employeeNotes.map((line, i) => (
+                  <li key={i}>{line}</li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           {header.notes && (
             <div className="mt-5 p-3 border-l-4 border-[var(--color-primary)] bg-gray-50 text-xs">
@@ -162,9 +204,6 @@ export function SlipGajiDialog({ employee, open, onOpenChange }: Props) {
             <SigCell title="Karyawan" name={employee.name} />
           </div>
 
-          <div className="mt-10 pt-3 border-t text-[10px] text-center text-gray-400">
-            Dicetak via Gajian Harianku · {formatDateID(new Date().toISOString())}
-          </div>
         </div>
 
         <div className="flex justify-end gap-2 pt-2">

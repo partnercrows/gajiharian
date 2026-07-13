@@ -42,8 +42,13 @@ export function ExcelImportDialog({ open, onOpenChange }: Props) {
 
   const onApply = (mode: "replace" | "append") => {
     if (!result) return;
-    const next = mode === "replace" ? result.imported : [...employees, ...result.imported];
+    var imported = result.imported;
+    var existing = mode === "replace" ? [] : employees;
+    var skipped = imported.filter(imp => existing.some(e => e.name.toLowerCase() === imp.name.toLowerCase())).length;
+    var filtered = imported.filter(imp => !existing.some(e => e.name.toLowerCase() === imp.name.toLowerCase()));
+    const next = mode === "replace" ? filtered : [...existing, ...filtered];
     setEmployees(next);
+    if (skipped > 0) toast.warning(skipped + " nama duplikat dilewati");
     toast.success(`${result.imported.length} baris diimpor`);
     setResult(null);
     onOpenChange(false);
@@ -55,7 +60,7 @@ export function ExcelImportDialog({ open, onOpenChange }: Props) {
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2"><FileSpreadsheet className="h-5 w-5 text-primary" /> Impor dari Excel</DialogTitle>
           <DialogDescription>
-            Unggah file .xlsx atau .csv. Kolom: <b>Nama Karyawan</b>, <b>Upah Harian</b>, <b>Hari Kerja</b>.
+            Unggah file .xlsx. Kolom: <b>Nama Karyawan</b>, <b>Upah Harian</b>, <b>Hari Kerja</b>, <b>Kasbon</b> (opsional).
           </DialogDescription>
         </DialogHeader>
 
@@ -75,7 +80,7 @@ export function ExcelImportDialog({ open, onOpenChange }: Props) {
                 e.preventDefault();
                 setDragOver(false);
                 const f = e.dataTransfer.files?.[0];
-                if (f) handleFile(f);
+                if (f) { if (!f.name.endsWith(".xlsx")) { toast.error("Hanya file .xlsx yang didukung"); return; } handleFile(f); }
               }}
               onClick={() => inputRef.current?.click()}
               className={cn(
@@ -85,15 +90,15 @@ export function ExcelImportDialog({ open, onOpenChange }: Props) {
             >
               <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-3" />
               <p className="text-sm font-medium">Letakkan file di sini, atau klik untuk memilih</p>
-              <p className="text-xs text-muted-foreground mt-1">.xlsx atau .csv hingga ~5MB</p>
+              <p className="text-xs text-muted-foreground mt-1">.xlsx hingga ~5MB</p>
               <input
                 ref={inputRef}
                 type="file"
-                accept=".xlsx,.xls,.csv"
+                accept=".xlsx"
                 className="hidden"
                 onChange={(e) => {
                   const f = e.target.files?.[0];
-                  if (f) handleFile(f);
+                  if (f) { if (!f.name.endsWith(".xlsx")) { toast.error("Hanya file .xlsx yang didukung"); return; } handleFile(f); }
                   e.target.value = "";
                 }}
               />

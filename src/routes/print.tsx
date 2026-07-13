@@ -3,13 +3,13 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useReactToPrint } from "react-to-print";
 import { Printer, ArrowLeft, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useInvoiceStore, grandTotal, totalForEmployee, totalWorkingDays } from "@/lib/store";
+import { useInvoiceStore, grandTotal, totalForEmployee, totalWorkingDays, totalKasbon } from "@/lib/store";
 import { formatRupiah, formatDateID, formatNumber } from "@/lib/format";
 
 export const Route = createFileRoute("/print")({
   head: () => ({
     meta: [
-      { title: "Pratinjau Cetak — Gajian Harianku" },
+      { title: "Pratinjau Cetak — Gaji Harian" },
       { name: "description", content: "Pratinjau cetak A4 portrait invoice payroll." },
     ],
   }),
@@ -24,6 +24,7 @@ function PrintPage() {
   const signature = useInvoiceStore((s) => s.signature);
   const companyName = useInvoiceStore((s) => s.companyName);
   const companyAddress = useInvoiceStore((s) => s.companyAddress);
+  const companyLogo = useInvoiceStore((s) => s.companyLogo);
 
   const handlePrint = useReactToPrint({
     contentRef: ref,
@@ -32,6 +33,7 @@ function PrintPage() {
 
   const total = grandTotal(employees);
   const days = totalWorkingDays(employees);
+  const kasbonTotal = totalKasbon(employees);
 
   const paymentLabel = {
     cash: "Tunai",
@@ -66,8 +68,8 @@ function PrintPage() {
           {/* Header */}
           <div className="flex items-start justify-between gap-6 pb-6 border-b-2 border-[var(--color-primary)]">
             <div className="flex items-center gap-3 min-w-0">
-              <div className="grid place-items-center h-12 w-12 rounded-md bg-[var(--color-primary)] text-white shrink-0">
-                <Wallet className="h-6 w-6" />
+              <div className="grid place-items-center h-12 w-12 rounded-md bg-[var(--color-primary)] text-white shrink-0 overflow-hidden">
+                {companyLogo ? <img src={companyLogo} alt="Logo" className="h-full w-full object-contain" /> : <Wallet className="h-6 w-6" />}
               </div>
               <div className="min-w-0">
                 <div className="text-xl font-bold truncate">{companyName}</div>
@@ -110,6 +112,7 @@ function PrintPage() {
                 <th className="text-left px-3 py-2">Nama Pekerja</th>
                 <th className="text-right px-3 py-2 w-32">Upah/Hari</th>
                 <th className="text-right px-3 py-2 w-20">Hari</th>
+                <th className="text-right px-3 py-2 w-24">Kasbon</th>
                 <th className="text-right px-3 py-2 w-36">Total</th>
                 <th className="text-center px-3 py-2 w-20">Status</th>
               </tr>
@@ -121,6 +124,7 @@ function PrintPage() {
                   <td className="px-3 py-2 font-medium">{e.name}</td>
                   <td className="px-3 py-2 text-right tabular-nums">{formatRupiah(e.dailySalary)}</td>
                   <td className="px-3 py-2 text-right tabular-nums">{e.workingDays}</td>
+                  <td className="px-3 py-2 text-right tabular-nums">{e.kasbon ? formatRupiah(e.kasbon) : "-"}</td>
                   <td className="px-3 py-2 text-right tabular-nums font-semibold">{formatRupiah(totalForEmployee(e))}</td>
                   <td className="px-3 py-2 text-center text-[10px] uppercase font-semibold">
                     <span className={e.status === "paid" ? "text-emerald-700" : "text-amber-700"}>
@@ -132,13 +136,13 @@ function PrintPage() {
             </tbody>
             <tfoot>
               <tr className="bg-gray-50 font-semibold">
-                <td colSpan={3} className="px-3 py-2 text-right text-gray-600 text-xs uppercase tracking-wide">Subtotal</td>
-                <td className="px-3 py-2 text-right tabular-nums">{formatNumber(days)} hari</td>
-                <td className="px-3 py-2 text-right tabular-nums">{formatRupiah(total)}</td>
+                <td colSpan={4} className="px-3 py-2 text-right text-gray-600 text-xs uppercase tracking-wide">Subtotal</td>
+                <td className="px-3 py-2 text-right tabular-nums">{formatRupiah(kasbonTotal)}</td>
+                <td className="px-3 py-2 text-right tabular-nums">{formatRupiah(total + kasbonTotal)}</td>
                 <td />
               </tr>
               <tr className="bg-[var(--color-primary)] text-white">
-                <td colSpan={4} className="px-3 py-2.5 text-right uppercase tracking-wide text-xs">Total Keseluruhan</td>
+                <td colSpan={5} className="px-3 py-2.5 text-right uppercase tracking-wide text-xs">Total Keseluruhan</td>
                 <td className="px-3 py-2.5 text-right text-base font-bold tabular-nums">{formatRupiah(total)}</td>
                 <td />
               </tr>
@@ -146,9 +150,8 @@ function PrintPage() {
           </table>
 
           {/* Summary cards */}
-          <div className="grid grid-cols-3 gap-4 mt-6 text-center text-xs">
+          <div className="grid grid-cols-2 gap-4 mt-6 text-center text-xs">
             <SummaryCell label="Pekerja" value={`${employees.length} orang`} />
-            <SummaryCell label="Total Hari Kerja" value={`${formatNumber(days)} hari`} />
             <SummaryCell label="Total Pembayaran" value={formatRupiah(total)} highlight />
           </div>
 
@@ -165,9 +168,6 @@ function PrintPage() {
             <SignatureCell title="Perwakilan Pekerja" name={signature.repName} image={signature.repImage} />
           </div>
 
-          <div className="mt-12 pt-4 border-t text-[10px] text-center text-gray-400">
-            Dibuat dengan Gajian Harianku · {formatDateID(new Date().toISOString())}
-          </div>
         </div>
       </div>
     </div>

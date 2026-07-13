@@ -1,12 +1,15 @@
 import { useState } from "react";
-import { Plus, Copy, Trash2, Eraser, FileText } from "lucide-react";
+import { Plus, Copy, Trash2, Eraser, FileText, FileSpreadsheet, StickyNote } from "lucide-react";
 import { useInvoiceStore, totalForEmployee } from "@/lib/store";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { CurrencyInput } from "@/components/CurrencyInput";
 import { SlipGajiDialog } from "@/components/SlipGajiDialog";
+import { ExcelImportDialog } from "@/components/ExcelImportDialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,6 +23,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { formatRupiah } from "@/lib/format";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 import type { Employee } from "@/lib/types";
 
 export function PayrollTable() {
@@ -32,6 +36,7 @@ export function PayrollTable() {
   const setStatus = useInvoiceStore((s) => s.setStatus);
 
   const [slipFor, setSlipFor] = useState<Employee | null>(null);
+  const [importOpen, setImportOpen] = useState(false);
 
   return (
     <Card className="overflow-hidden">
@@ -67,6 +72,9 @@ export function PayrollTable() {
           <Button size="sm" onClick={() => addEmployee()}>
             <Plus className="h-4 w-4" /> Tambah Baris
           </Button>
+          <Button variant="outline" size="sm" onClick={() => setImportOpen(true)}>
+            <FileSpreadsheet className="h-4 w-4" /> Impor Excel
+          </Button>
         </div>
       </div>
 
@@ -78,6 +86,7 @@ export function PayrollTable() {
               <th className="px-3 py-3 min-w-[200px]">Nama Karyawan</th>
               <th className="px-3 py-3 w-[170px]">Upah per Hari</th>
               <th className="px-3 py-3 w-[110px]">Hari</th>
+              <th className="px-3 py-3 w-[130px]">Kasbon</th>
               <th className="px-3 py-3 w-[160px] text-right">Total</th>
               <th className="px-3 py-3 w-[130px]">Status</th>
               <th className="px-3 py-3 w-[150px] text-right">Aksi</th>
@@ -86,7 +95,7 @@ export function PayrollTable() {
           <tbody>
             {employees.length === 0 ? (
               <tr>
-                <td colSpan={7} className="text-center py-12 text-muted-foreground">
+                <td colSpan={8} className="text-center py-12 text-muted-foreground">
                   <div className="space-y-2">
                     <p>Belum ada karyawan.</p>
                     <Button variant="outline" size="sm" onClick={() => addEmployee()}>
@@ -102,7 +111,7 @@ export function PayrollTable() {
                   <td className="px-3 py-2">
                     <Input
                       value={e.name}
-                      onChange={(ev) => updateEmployee(e.id, { name: ev.target.value })}
+                      onChange={(ev) => { const name = ev.target.value.trim(); const dup = employees.find(x => x.id !== e.id && x.name.toLowerCase() === name.toLowerCase()); if (dup) toast.warning("Nama \"" + name + "\" sudah ada"); updateEmployee(e.id, { name: ev.target.value }); }}
                       placeholder="Nama pekerja"
                       className="h-9"
                     />
@@ -129,6 +138,14 @@ export function PayrollTable() {
                       placeholder="0"
                     />
                   </td>
+                  <td className="px-3 py-2">
+                    <CurrencyInput
+                      value={e.kasbon ?? 0}
+                      onValueChange={(n) => updateEmployee(e.id, { kasbon: n })}
+                      placeholder="0"
+                      className="h-9 text-right"
+                    />
+                  </td>
                   <td className="px-3 py-2 text-right font-semibold tabular-nums">
                     {formatRupiah(totalForEmployee(e))}
                   </td>
@@ -152,6 +169,30 @@ export function PayrollTable() {
                   </td>
                   <td className="px-3 py-2">
                     <div className="flex items-center justify-end gap-1">
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className={cn(
+                              "h-8 w-8",
+                              e.catatan?.trim() ? "text-amber-600 hover:text-amber-600" : "",
+                            )}
+                            title="Catatan Karyawan"
+                          >
+                            <StickyNote className="h-4 w-4" />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent align="end" className="w-80">
+                          <p className="text-sm font-medium mb-2">Catatan — {e.name || "Karyawan"}</p>
+                          <Textarea
+                            value={e.catatan ?? ""}
+                            onChange={(ev) => updateEmployee(e.id, { catatan: ev.target.value })}
+                            placeholder={"Satu poin per baris, misal:\nkasbon tanggal 2\nkasbon tanggal 3"}
+                            rows={5}
+                          />
+                        </PopoverContent>
+                      </Popover>
                       <Button
                         variant="ghost"
                         size="icon"
@@ -193,6 +234,7 @@ export function PayrollTable() {
         open={!!slipFor}
         onOpenChange={(o) => !o && setSlipFor(null)}
       />
+      <ExcelImportDialog open={importOpen} onOpenChange={setImportOpen} />
     </Card>
   );
 }

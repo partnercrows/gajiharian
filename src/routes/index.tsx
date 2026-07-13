@@ -17,7 +17,7 @@ import { formatRupiah } from "@/lib/format";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Dashboard — Gajian Harianku" },
+      { title: "Dashboard — Gaji Harian" },
       { name: "description", content: "Create payroll invoices, import from Excel, or load a worker template." },
     ],
   }),
@@ -44,7 +44,7 @@ function Dashboard() {
     },
     {
       title: "Impor Excel",
-      desc: "Unggah .xlsx atau .csv. Unduh template, isi, dan kami akan memprosesnya.",
+desc: "Unggah .xlsx. Unduh template, isi, dan kami akan memprosesnya.",
       icon: FileSpreadsheet,
       cta: "Impor file",
       onClick: () => {

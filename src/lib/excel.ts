@@ -10,13 +10,13 @@ export interface ImportResult {
 
 export const downloadTemplateXlsx = () => {
   const data = [
-    ["Employee Name", "Daily Salary", "Working Days"],
-    ["Budi Santoso", 150000, 6],
-    ["Siti Aminah", 175000, 5],
-    ["Agus Wijaya", 150000, 6],
+    ["Employee Name", "Daily Salary", "Working Days", "Kasbon (optional)"],
+    ["Budi Santoso", 150000, 6, 0],
+    ["Siti Aminah", 175000, 5, 50000],
+    ["Agus Wijaya", 150000, 6, 0],
   ];
   const ws = XLSX.utils.aoa_to_sheet(data);
-  ws["!cols"] = [{ wch: 28 }, { wch: 16 }, { wch: 16 }];
+  ws["!cols"] = [{ wch: 28 }, { wch: 16 }, { wch: 16 }, { wch: 16 }];
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, "Payroll");
   XLSX.writeFile(wb, "payroll-template.xlsx");
@@ -42,6 +42,7 @@ export const parseSpreadsheet = async (file: File): Promise<ImportResult> => {
     const nameKey = findKey("Employee Name", "Name", "Nama");
     const salaryKey = findKey("Daily Salary", "Salary", "Upah Harian", "Gaji Harian");
     const daysKey = findKey("Working Days", "Days", "Hari Kerja");
+    const kasbonKey = findKey("Kasbon", "Cash Advance", "Potongan");
 
     const name = nameKey ? String(row[nameKey] ?? "").trim() : "";
     const salary = salaryKey ? Number(row[salaryKey]) : NaN;
@@ -63,11 +64,14 @@ export const parseSpreadsheet = async (file: File): Promise<ImportResult> => {
       return;
     }
 
+    const kasbon = kasbonKey ? (Number(row[kasbonKey]) || 0) : 0;
+
     imported.push({
       id: uid(),
       name,
       dailySalary: salary,
       workingDays: days,
+      kasbon: kasbon >= 0 ? kasbon : undefined,
       status: "unpaid" as PaymentStatus,
     });
   });

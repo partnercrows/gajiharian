@@ -13,6 +13,7 @@ import { Route as TemplatesRouteImport } from './routes/templates'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as PrintRouteImport } from './routes/print'
+import { Route as HelpRouteImport } from './routes/help'
 import { Route as EditorRouteImport } from './routes/editor'
 import { Route as DraftsRouteImport } from './routes/drafts'
 import { Route as IndexRouteImport } from './routes/index'
@@ -37,6 +38,11 @@ const PrintRoute = PrintRouteImport.update({
   path: '/print',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HelpRoute = HelpRouteImport.update({
+  id: '/help',
+  path: '/help',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EditorRoute = EditorRouteImport.update({
   id: '/editor',
   path: '/editor',
@@ -57,6 +63,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/drafts': typeof DraftsRoute
   '/editor': typeof EditorRoute
+  '/help': typeof HelpRoute
   '/print': typeof PrintRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -66,6 +73,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/drafts': typeof DraftsRoute
   '/editor': typeof EditorRoute
+  '/help': typeof HelpRoute
   '/print': typeof PrintRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -76,6 +84,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/drafts': typeof DraftsRoute
   '/editor': typeof EditorRoute
+  '/help': typeof HelpRoute
   '/print': typeof PrintRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -87,6 +96,7 @@ export interface FileRouteTypes {
     | '/'
     | '/drafts'
     | '/editor'
+    | '/help'
     | '/print'
     | '/settings'
     | '/sitemap.xml'
@@ -96,6 +106,7 @@ export interface FileRouteTypes {
     | '/'
     | '/drafts'
     | '/editor'
+    | '/help'
     | '/print'
     | '/settings'
     | '/sitemap.xml'
@@ -105,6 +116,7 @@ export interface FileRouteTypes {
     | '/'
     | '/drafts'
     | '/editor'
+    | '/help'
     | '/print'
     | '/settings'
     | '/sitemap.xml'
@@ -115,6 +127,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DraftsRoute: typeof DraftsRoute
   EditorRoute: typeof EditorRoute
+  HelpRoute: typeof HelpRoute
   PrintRoute: typeof PrintRoute
   SettingsRoute: typeof SettingsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -151,6 +164,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrintRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/help': {
+      id: '/help'
+      path: '/help'
+      fullPath: '/help'
+      preLoaderRoute: typeof HelpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/editor': {
       id: '/editor'
       path: '/editor'
@@ -179,6 +199,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DraftsRoute: DraftsRoute,
   EditorRoute: EditorRoute,
+  HelpRoute: HelpRoute,
   PrintRoute: PrintRoute,
   SettingsRoute: SettingsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,

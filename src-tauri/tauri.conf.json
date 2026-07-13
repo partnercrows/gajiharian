@@ -1,0 +1,80 @@
+{
+  "$schema": "https://raw.githubusercontent.com/nicedoc/tauri/dev/crates/tauri-config-schema/schema.json",
+  "productName": "Gaji Harian",
+  "version": "1.0.0",
+  "identifier": "com.gajiharian.app",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:5173",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../.output/public"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Gaji Harian",
+        "width": 1200,
+        "height": 800,
+        "resizable": true,
+        "fullscreen": false,
+        "minWidth": 900,
+        "minHeight": 600
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser",
+        "installerIcon": "icons/icon.ico",
+        "languages": ["English", "Indonesian"],
+        "displayLanguageSelector": true,
+        "startMenuFolder": "Gaji Harian"
+      },
+      "wix": {
+        "language": ["en-US", "id-ID"]
+      }
+    },
+    "linux": {
+      "deb": {
+        "depends": [
+          "libwebkit2gtk-4.1-0",
+          "libgtk-3-0",
+          "libayatana-appindicator3-1"
+        ]
+      },
+      "appimage": {
+        "bundleMediaFramework": true
+      }
+    },
+    "macOS": {
+      "dmg": {
+        "appPosition": {
+          "x": 180,
+          "y": 170
+        },
+        "applicationFolderPosition": {
+          "x": 480,
+          "y": 170
+        },
+        "windowSize": {
+          "width": 660,
+          "height": 400
+        }
+      }
+    }
+  },
+  "plugins": {}
+}

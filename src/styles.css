@@ -1,14 +1,13 @@
+@import '@fontsource/plus-jakarta-sans';
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
 
 
-
-
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Gajian Harianku — A'raf-inspired design system.
+ * Gaji Harian — A'raf-inspired design system.
  * Clean, professional, Indonesian fintech vibe.
  * Primary: deep teal. Accent: warm gold for paid status.
  */
@@ -141,6 +140,43 @@
   --ring: oklch(0.7 0.11 195);
 }
 
+/* Reading mode — sepia/warm, low contrast for long reading sessions */
+:root.reading {
+  --background: oklch(0.96 0.02 65);
+  --foreground: oklch(0.25 0.03 65);
+  --surface: oklch(0.98 0.015 65);
+  --surface-foreground: oklch(0.25 0.03 65);
+  --card: oklch(0.98 0.015 65);
+  --card-foreground: oklch(0.25 0.03 65);
+  --popover: oklch(0.98 0.015 65);
+  --popover-foreground: oklch(0.25 0.03 65);
+  --primary: oklch(0.38 0.1 50);
+  --primary-foreground: oklch(0.99 0.005 0);
+  --secondary: oklch(0.88 0.04 55);
+  --secondary-foreground: oklch(0.3 0.05 55);
+  --muted: oklch(0.9 0.03 65);
+  --muted-foreground: oklch(0.45 0.04 65);
+  --accent: oklch(0.78 0.08 50);
+  --accent-foreground: oklch(0.28 0.06 50);
+  --destructive: oklch(0.5 0.18 25);
+  --destructive-foreground: oklch(0.99 0.005 0);
+  --success: oklch(0.55 0.1 145);
+  --success-foreground: oklch(0.99 0.005 0);
+  --warning: oklch(0.65 0.12 65);
+  --warning-foreground: oklch(0.3 0.05 65);
+  --border: oklch(0.82 0.04 65);
+  --input: oklch(0.82 0.04 65);
+  --ring: oklch(0.38 0.1 50);
+  --sidebar: oklch(0.38 0.06 50);
+  --sidebar-foreground: oklch(0.95 0.02 55);
+  --sidebar-primary: oklch(0.5 0.1 50);
+  --sidebar-primary-foreground: oklch(0.99 0.005 0);
+  --sidebar-accent: oklch(0.44 0.07 50);
+  --sidebar-accent-foreground: oklch(0.95 0.02 55);
+  --sidebar-border: oklch(0.46 0.06 50);
+  --sidebar-ring: oklch(0.5 0.1 50);
+}
+
 @layer base {
   * {
     border-color: var(--color-border);
@@ -161,11 +197,13 @@
 @media print {
   @page {
     size: A4 portrait;
-    margin: 14mm;
+    margin: 0;
   }
 
   body {
     background: white !important;
+    margin: 0;
+    padding: 14mm;
   }
 
   .no-print,

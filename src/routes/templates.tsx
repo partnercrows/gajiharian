@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Layers, Pencil, Trash2, Download, Plus } from "lucide-react";
+import { Layers, Pencil, Trash2, Download, Plus, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { AppLayout } from "@/components/AppLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -30,7 +30,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/templates")({
   head: () => ({
     meta: [
-      { title: "Templates — Gajian Harianku" },
+      { title: "Templates — Gaji Harian" },
       { name: "description", content: "Manage saved worker templates for quick payroll re-use." },
     ],
   }),
@@ -46,6 +46,20 @@ function TemplatesPage() {
 
   const [renaming, setRenaming] = useState<{ id: string; name: string } | null>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const pageSize = 9;
+
+  const filtered = useMemo(() => {
+    const q = search.toLowerCase().trim();
+    if (!q) return templates;
+    return templates.filter((t) => t.name.toLowerCase().includes(q));
+  }, [templates, search]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const pageTemplates = useMemo(() => {
+    return filtered.slice((page - 1) * pageSize, page * pageSize);
+  }, [filtered, page]);
 
   return (
     <AppLayout>
@@ -62,6 +76,18 @@ function TemplatesPage() {
           </Button>
         </div>
 
+        {templates.length > 0 && (
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              className="pl-9"
+              placeholder="Cari template..."
+              value={search}
+              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+            />
+          </div>
+        )}
+
         {templates.length === 0 ? (
           <Card className="p-16 text-center">
             <Layers className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
@@ -70,9 +96,15 @@ function TemplatesPage() {
               Dari editor invoice, klik "Simpan Template" untuk menyimpan daftar pekerja saat ini.
             </p>
           </Card>
+        ) : filtered.length === 0 ? (
+          <Card className="p-16 text-center">
+            <Layers className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
+            <p className="font-medium">Tidak ada template yang cocok</p>
+            <p className="text-sm text-muted-foreground mt-1">Coba kata kunci lain.</p>
+          </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {templates.map((t) => {
+            {pageTemplates.map((t) => {
               const avg = t.workers.length
                 ? t.workers.reduce((s, w) => s + w.dailySalary, 0) / t.workers.length
                 : 0;
@@ -116,6 +148,32 @@ function TemplatesPage() {
                 </Card>
               );
             })}
+          </div>
+        )}
+
+        {templates.length > 0 && filtered.length > pageSize && (
+          <div className="flex items-center justify-between pt-2">
+            <p className="text-xs text-muted-foreground">
+              Halaman {page} dari {totalPages} · {filtered.length} template
+            </p>
+            <div className="flex items-center gap-1">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={page <= 1}
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+              >
+                <ChevronLeft className="h-4 w-4" /> Sebelumnya
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={page >= totalPages}
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              >
+                Selanjutnya <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         )}
       </div>

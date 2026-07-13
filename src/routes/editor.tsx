@@ -6,7 +6,6 @@ import {
   Upload,
   Download,
   FilePlus,
-  FileSpreadsheet,
   Layers,
   MoreHorizontal,
   FolderOpen,
@@ -17,7 +16,6 @@ import { Button } from "@/components/ui/button";
 import { InvoiceHeaderForm } from "@/components/InvoiceHeaderForm";
 import { PayrollTable } from "@/components/PayrollTable";
 import { PayrollSummary } from "@/components/PayrollSummary";
-import { ExcelImportDialog } from "@/components/ExcelImportDialog";
 import { SignatureSection } from "@/components/SignatureSection";
 import {
   DropdownMenu,
@@ -46,7 +44,7 @@ export const Route = createFileRoute("/editor")({
   validateSearch: (s) => searchSchema.parse(s),
   head: () => ({
     meta: [
-      { title: "Invoice Editor — Gajian Harianku" },
+      { title: "Invoice Editor — Gaji Harian" },
       { name: "description", content: "Build a payroll invoice with manual rows, Excel import, or templates." },
     ],
   }),
@@ -56,13 +54,14 @@ export const Route = createFileRoute("/editor")({
 function EditorPage() {
   const navigate = useNavigate();
   const search = Route.useSearch();
-  const [importOpen, setImportOpen] = useState(Boolean(search.import));
   const [tplDialog, setTplDialog] = useState(false);
   const [tplName, setTplName] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const header = useInvoiceStore((s) => s.header);
   const employees = useInvoiceStore((s) => s.employees);
+  const drafts = useInvoiceStore((s) => s.drafts);
+  const templates = useInvoiceStore((s) => s.templates);
   const signature = useInvoiceStore((s) => s.signature);
   const saveDraft = useInvoiceStore((s) => s.saveDraft);
   const saveTemplate = useInvoiceStore((s) => s.saveTemplate);
@@ -97,6 +96,7 @@ function EditorPage() {
   };
 
   const handleExport = () => {
+    var settings = { companyName: useInvoiceStore.getState().companyName, companyAddress: useInvoiceStore.getState().companyAddress, companyPhone: useInvoiceStore.getState().companyPhone, companyLogo: useInvoiceStore.getState().companyLogo };
     exportProject({
       id: header.invoiceNumber,
       header,
@@ -104,15 +104,27 @@ function EditorPage() {
       signature,
       createdAt: Date.now(),
       updatedAt: Date.now(),
-    });
+    }, drafts, templates, settings);
     toast.success("Project file downloaded");
   };
 
   const handleOpenFile = async (file: File) => {
     try {
-      const proj = await importProject(file);
-      loadProject(proj);
-      toast.success("Proyek dimuat");
+      const result = await importProject(file);
+      loadProject(result.project);
+      const state = useInvoiceStore.getState();
+      const merge: any = { drafts: result.drafts.length > 0 ? [...result.drafts, ...state.drafts].slice(0, 50) : state.drafts, templates: result.templates.length > 0 ? [...result.templates, ...state.templates] : state.templates };
+      useInvoiceStore.setState({ drafts: merge.drafts, templates: merge.templates });
+      if (result.settings) {
+        const s = result.settings as any;
+        var patch: any = {};
+        if (s.companyName) patch.companyName = s.companyName;
+        if (s.companyAddress !== undefined) patch.companyAddress = s.companyAddress;
+        if (s.companyPhone !== undefined) patch.companyPhone = s.companyPhone;
+        if (s.companyLogo !== undefined) patch.companyLogo = s.companyLogo;
+        useInvoiceStore.getState().updateCompany(patch);
+      }
+      toast.success("Proyek + Draft + Template dimuat");
     } catch (err) {
       toast.error("File .payroll tidak valid", { description: (err as Error).message });
     }
@@ -130,10 +142,7 @@ function EditorPage() {
             <p className="text-xs text-muted-foreground mt-0.5 font-mono">{header.invoiceNumber}</p>
           </div>
           <div className="flex flex-wrap items-center gap-2 shrink-0">
-            <Button variant="outline" size="sm" onClick={() => setImportOpen(true)}>
-              <FileSpreadsheet className="h-4 w-4" /> Impor Excel
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => setTplDialog(true)} disabled={employees.length === 0}>
+                        <Button variant="outline" size="sm" onClick={() => setTplDialog(true)} disabled={employees.length === 0}>
               <Layers className="h-4 w-4" /> Simpan Template
             </Button>
             <Button variant="outline" size="sm" onClick={handleSave}>
@@ -183,8 +192,6 @@ function EditorPage() {
         <PayrollTable />
         <SignatureSection />
       </div>
-
-      <ExcelImportDialog open={importOpen} onOpenChange={setImportOpen} />
 
       <Dialog open={tplDialog} onOpenChange={setTplDialog}>
         <DialogContent>

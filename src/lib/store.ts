@@ -44,6 +44,9 @@ const emptyHeader = (): InvoiceHeader => ({
   personInCharge: "",
   paymentMethod: "cash",
   notes: "",
+  periodStartDate: "",
+  periodEndDate: "",
+  autoCalculatePeriod: false,
 });
 
 const emptySignature = (): SignatureInfo => ({
@@ -60,6 +63,8 @@ interface InvoiceState {
   lastSavedAt: number | null;
   companyName: string;
   companyAddress: string;
+  companyPhone: string;
+  companyLogo: string;
 
   // header
   updateHeader: (patch: Partial<InvoiceHeader>) => void;
@@ -93,7 +98,7 @@ interface InvoiceState {
   deleteTemplate: (id: string) => void;
 
   // company
-  updateCompany: (patch: { companyName?: string; companyAddress?: string }) => void;
+  updateCompany: (patch: { companyName?: string; companyAddress?: string; companyPhone?: string; companyLogo?: string }) => void;
 }
 
 export const useInvoiceStore = create<InvoiceState>()(
@@ -105,8 +110,10 @@ export const useInvoiceStore = create<InvoiceState>()(
       drafts: [],
       templates: [],
       lastSavedAt: null,
-      companyName: "Gajian Harianku",
+      companyName: "Gaji Harian",
       companyAddress: "",
+      companyPhone: "",
+      companyLogo: "",
 
       updateHeader: (patch) =>
         set((s) => ({ header: { ...s.header, ...patch } })),
@@ -221,6 +228,8 @@ export const useInvoiceStore = create<InvoiceState>()(
             workers: s.employees.map((e) => ({
               name: e.name,
               dailySalary: e.dailySalary,
+              kasbon: e.kasbon,
+              workingDays: e.workingDays,
             })),
             createdAt: Date.now(),
           };
@@ -236,7 +245,8 @@ export const useInvoiceStore = create<InvoiceState>()(
               id: uid(),
               name: w.name,
               dailySalary: w.dailySalary,
-              workingDays: 1,
+              workingDays: w.workingDays ?? 1,
+              kasbon: w.kasbon,
               status: "unpaid" as PaymentStatus,
             })),
           };
@@ -263,16 +273,21 @@ export const useInvoiceStore = create<InvoiceState>()(
         templates: s.templates,
         companyName: s.companyName,
         companyAddress: s.companyAddress,
+        companyPhone: s.companyPhone,
+        companyLogo: s.companyLogo,
       }),
     },
   ),
 );
 
 export const totalForEmployee = (e: Employee) =>
-  (Number(e.dailySalary) || 0) * (Number(e.workingDays) || 0);
+  (Number(e.dailySalary) || 0) * (Number(e.workingDays) || 0) - (Number(e.kasbon) || 0);
 
 export const grandTotal = (list: Employee[]) =>
   list.reduce((sum, e) => sum + totalForEmployee(e), 0);
+
+export const totalKasbon = (list: Employee[]) =>
+  list.reduce((sum, e) => sum + (Number(e.kasbon) || 0), 0);
 
 export const totalWorkingDays = (list: Employee[]) =>
   list.reduce((sum, e) => sum + (Number(e.workingDays) || 0), 0);

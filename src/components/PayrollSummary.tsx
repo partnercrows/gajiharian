@@ -1,18 +1,19 @@
-import { Users, CalendarDays, Wallet } from "lucide-react";
+import { Users, CalendarDays, Wallet, DollarSign } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { useInvoiceStore, grandTotal, totalWorkingDays } from "@/lib/store";
+import { useInvoiceStore, grandTotal, totalWorkingDays, totalKasbon } from "@/lib/store";
 import { formatRupiah, formatNumber } from "@/lib/format";
 
 export function PayrollSummary() {
   const employees = useInvoiceStore((s) => s.employees);
   const total = grandTotal(employees);
   const days = totalWorkingDays(employees);
+  const kasbon = totalKasbon(employees);
   const paid = employees.filter((e) => e.status === "paid").length;
 
   const items = [
     { label: "Total Karyawan", value: formatNumber(employees.length), sub: `${paid} sudah lunas`, icon: Users },
-    { label: "Total Hari Kerja", value: formatNumber(days), sub: "seluruh baris", icon: CalendarDays },
-    { label: "Total Pembayaran", value: formatRupiah(total), sub: "dihitung otomatis", icon: Wallet, highlight: true },
+    { label: "Total Kasbon", value: formatRupiah(kasbon), sub: "potongan", icon: DollarSign },
+    { label: "Total Pembayaran", value: formatRupiah(total), sub: "setelah potongan", icon: Wallet, highlight: true },
   ];
 
   return (
