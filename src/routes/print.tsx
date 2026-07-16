@@ -3,7 +3,7 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useReactToPrint } from "react-to-print";
 import { Printer, ArrowLeft, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useInvoiceStore, grandTotal, totalForEmployee, totalWorkingDays, totalKasbon } from "@/lib/store";
+import { useInvoiceStore, grandTotal, totalForEmployee, totalWorkingDays, totalKasbon, totalLembur } from "@/lib/store";
 import { formatRupiah, formatDateID, formatNumber } from "@/lib/format";
 
 export const Route = createFileRoute("/print")({
@@ -34,6 +34,8 @@ function PrintPage() {
   const total = grandTotal(employees);
   const days = totalWorkingDays(employees);
   const kasbonTotal = totalKasbon(employees);
+  const lemburTotal = totalLembur(employees);
+  const subtotalAll = total + kasbonTotal - lemburTotal;
 
   const paymentLabel = {
     cash: "Tunai",
@@ -108,25 +110,27 @@ function PrintPage() {
           <table className="w-full text-sm border-collapse">
             <thead>
               <tr className="bg-[var(--color-primary)] text-white">
-                <th className="text-left px-3 py-2 w-10">#</th>
-                <th className="text-left px-3 py-2">Nama Pekerja</th>
-                <th className="text-right px-3 py-2 w-32">Upah/Hari</th>
-                <th className="text-right px-3 py-2 w-20">Hari</th>
-                <th className="text-right px-3 py-2 w-24">Kasbon</th>
-                <th className="text-right px-3 py-2 w-36">Total</th>
-                <th className="text-center px-3 py-2 w-20">Status</th>
+                <th className="text-left px-2 py-2 w-8">#</th>
+                <th className="text-left px-2 py-2">Nama Pekerja</th>
+                <th className="text-right px-2 py-2 w-24">Upah/Hari</th>
+                <th className="text-right px-2 py-2 w-14">Hari</th>
+                <th className="text-right px-2 py-2 w-24">Lembur</th>
+                <th className="text-right px-2 py-2 w-24">Kasbon</th>
+                <th className="text-right px-2 py-2 w-28">Total</th>
+                <th className="text-center px-2 py-2 w-16">Status</th>
               </tr>
             </thead>
             <tbody>
               {employees.map((e, i) => (
                 <tr key={e.id} className="border-b border-gray-200">
-                  <td className="px-3 py-2 text-gray-500">{i + 1}</td>
-                  <td className="px-3 py-2 font-medium">{e.name}</td>
-                  <td className="px-3 py-2 text-right tabular-nums">{formatRupiah(e.dailySalary)}</td>
-                  <td className="px-3 py-2 text-right tabular-nums">{e.workingDays}</td>
-                  <td className="px-3 py-2 text-right tabular-nums">{e.kasbon ? formatRupiah(e.kasbon) : "-"}</td>
-                  <td className="px-3 py-2 text-right tabular-nums font-semibold">{formatRupiah(totalForEmployee(e))}</td>
-                  <td className="px-3 py-2 text-center text-[10px] uppercase font-semibold">
+                  <td className="px-2 py-2 text-gray-500">{i + 1}</td>
+                  <td className="px-2 py-2 font-medium">{e.name}</td>
+                  <td className="px-2 py-2 text-right tabular-nums">{formatRupiah(e.dailySalary)}</td>
+                  <td className="px-2 py-2 text-right tabular-nums">{e.workingDays}</td>
+                  <td className="px-2 py-2 text-right tabular-nums whitespace-nowrap">{e.lembur ? "+" + formatRupiah(e.lembur) : "-"}</td>
+                  <td className="px-2 py-2 text-right tabular-nums whitespace-nowrap">{e.kasbon ? "-" + formatRupiah(e.kasbon) : "-"}</td>
+                  <td className="px-2 py-2 text-right tabular-nums font-semibold">{formatRupiah(totalForEmployee(e))}</td>
+                  <td className="px-2 py-2 text-center text-[10px] uppercase font-semibold">
                     <span className={e.status === "paid" ? "text-emerald-700" : "text-amber-700"}>
                       {e.status === "paid" ? "Lunas" : "Pending"}
                     </span>
@@ -135,15 +139,24 @@ function PrintPage() {
               ))}
             </tbody>
             <tfoot>
-              <tr className="bg-gray-50 font-semibold">
-                <td colSpan={4} className="px-3 py-2 text-right text-gray-600 text-xs uppercase tracking-wide">Subtotal</td>
-                <td className="px-3 py-2 text-right tabular-nums">{formatRupiah(kasbonTotal)}</td>
-                <td className="px-3 py-2 text-right tabular-nums">{formatRupiah(total + kasbonTotal)}</td>
+              <tr className="bg-gray-50">
+                <td colSpan={6} className="px-2 py-2 text-right text-gray-600 text-xs uppercase tracking-wide">Total Sebelum Penyesuaian</td>
+                <td className="px-2 py-2 text-right tabular-nums">{formatRupiah(subtotalAll)}</td>
+                <td />
+              </tr>
+              <tr className="bg-gray-50">
+                <td colSpan={6} className="px-2 py-2 text-right text-gray-600 text-xs uppercase tracking-wide">Total Lembur</td>
+                <td className="px-2 py-2 text-right tabular-nums">{lemburTotal ? "+" + formatRupiah(lemburTotal) : "Rp 0"}</td>
+                <td />
+              </tr>
+              <tr className="bg-gray-50">
+                <td colSpan={6} className="px-2 py-2 text-right text-gray-600 text-xs uppercase tracking-wide">Total Kasbon</td>
+                <td className="px-2 py-2 text-right tabular-nums">{kasbonTotal ? "-" + formatRupiah(kasbonTotal) : "Rp 0"}</td>
                 <td />
               </tr>
               <tr className="bg-[var(--color-primary)] text-white">
-                <td colSpan={5} className="px-3 py-2.5 text-right uppercase tracking-wide text-xs">Total Keseluruhan</td>
-                <td className="px-3 py-2.5 text-right text-base font-bold tabular-nums">{formatRupiah(total)}</td>
+                <td colSpan={6} className="px-2 py-2.5 text-right uppercase tracking-wide text-xs">Total Keseluruhan</td>
+                <td className="px-2 py-2.5 text-right text-base font-bold tabular-nums">{formatRupiah(total)}</td>
                 <td />
               </tr>
             </tfoot>

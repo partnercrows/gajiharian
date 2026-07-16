@@ -49,6 +49,8 @@ export function SlipGajiDialog({ employee, open, onOpenChange }: Props) {
 
   if (!employee) return null;
   const total = totalForEmployee(employee);
+  const subtotal = (Number(employee.dailySalary) || 0) * (Number(employee.workingDays) || 0);
+  const afterLembur = subtotal + (Number(employee.lembur) || 0);
   const employeeNotes = (employee.catatan ?? "")
     .split("\n")
     .map((line) => line.trim())
@@ -141,13 +143,19 @@ export function SlipGajiDialog({ employee, open, onOpenChange }: Props) {
               </tr>
               <tr className="border-b border-gray-200">
                 <td className="px-3 py-2">Total Sebelum Potongan</td>
-                <td className="px-3 py-2 text-right tabular-nums">
-                  {formatRupiah((Number(employee.dailySalary) || 0) * (Number(employee.workingDays) || 0))}
-                </td>
+                <td className="px-3 py-2 text-right tabular-nums">{formatRupiah(subtotal)}</td>
+              </tr>
+              <tr className="border-b border-gray-200">
+                <td className="px-3 py-2">Lembur</td>
+                <td className="px-3 py-2 text-right tabular-nums">{employee.lembur ? "+" + formatRupiah(employee.lembur) : "Rp 0"}</td>
+              </tr>
+              <tr className="border-b border-gray-200 bg-gray-50 font-medium">
+                <td className="px-3 py-2">Total Setelah Lembur</td>
+                <td className="px-3 py-2 text-right tabular-nums">{formatRupiah(afterLembur)}</td>
               </tr>
               <tr className="border-b border-gray-200">
                 <td className="px-3 py-2">Kasbon / Potongan</td>
-                <td className="px-3 py-2 text-right tabular-nums">{employee.kasbon ? formatRupiah(employee.kasbon) : "Rp 0"}</td>
+                <td className="px-3 py-2 text-right tabular-nums">{employee.kasbon ? "-" + formatRupiah(employee.kasbon) : "Rp 0"}</td>
               </tr>
               <tr className="border-b border-gray-200">
                 <td className="px-3 py-2">Status Pembayaran</td>
@@ -164,7 +172,7 @@ export function SlipGajiDialog({ employee, open, onOpenChange }: Props) {
             </tbody>
             <tfoot>
               <tr className="bg-[var(--color-primary)] text-white">
-                <td className="px-3 py-2.5 uppercase tracking-wide text-xs">{employee.kasbon ? "Total Diterima" : "Total Diterima"}</td>
+                <td className="px-3 py-2.5 uppercase tracking-wide text-xs">Total Diterima</td>
                 <td className="px-3 py-2.5 text-right text-base font-bold tabular-nums">
                   {formatRupiah(total)}
                 </td>

@@ -79,23 +79,24 @@ export function PayrollTable() {
       </div>
 
       <div className="max-h-[560px] overflow-auto">
-        <table className="w-full text-sm">
+        <table className="w-full min-w-[1130px] text-sm">
           <thead className="sticky top-0 bg-muted/80 backdrop-blur z-10">
             <tr className="text-left text-xs uppercase tracking-wide text-muted-foreground">
               <th className="w-10 px-4 py-3">#</th>
-              <th className="px-3 py-3 min-w-[200px]">Nama Karyawan</th>
-              <th className="px-3 py-3 w-[170px]">Upah per Hari</th>
-              <th className="px-3 py-3 w-[110px]">Hari</th>
+              <th className="px-3 py-3 min-w-[180px]">Nama Karyawan</th>
+              <th className="px-3 py-3 w-[150px]">Upah per Hari</th>
+              <th className="px-3 py-3 w-[90px]">Hari</th>
+              <th className="px-3 py-3 w-[130px]">Lembur</th>
               <th className="px-3 py-3 w-[130px]">Kasbon</th>
-              <th className="px-3 py-3 w-[160px] text-right">Total</th>
-              <th className="px-3 py-3 w-[130px]">Status</th>
+              <th className="px-3 py-3 w-[150px] text-right">Total</th>
+              <th className="px-3 py-3 w-[110px]">Status</th>
               <th className="px-3 py-3 w-[150px] text-right">Aksi</th>
             </tr>
           </thead>
           <tbody>
             {employees.length === 0 ? (
               <tr>
-                <td colSpan={8} className="text-center py-12 text-muted-foreground">
+                <td colSpan={9} className="text-center py-12 text-muted-foreground">
                   <div className="space-y-2">
                     <p>Belum ada karyawan.</p>
                     <Button variant="outline" size="sm" onClick={() => addEmployee()}>
@@ -134,8 +135,16 @@ export function PayrollTable() {
                         const n = Math.max(0, Math.floor(Number(ev.target.value) || 0));
                         updateEmployee(e.id, { workingDays: n });
                       }}
-                      className="h-9 text-right tabular-nums"
+                      className="h-9 text-right tabular-nums [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                       placeholder="0"
+                    />
+                  </td>
+                  <td className="px-3 py-2">
+                    <CurrencyInput
+                      value={e.lembur ?? 0}
+                      onValueChange={(n) => updateEmployee(e.id, { lembur: n })}
+                      placeholder="0"
+                      className="h-9 text-right text-success"
                     />
                   </td>
                   <td className="px-3 py-2">
@@ -143,7 +152,7 @@ export function PayrollTable() {
                       value={e.kasbon ?? 0}
                       onValueChange={(n) => updateEmployee(e.id, { kasbon: n })}
                       placeholder="0"
-                      className="h-9 text-right"
+                      className="h-9 text-right text-destructive"
                     />
                   </td>
                   <td className="px-3 py-2 text-right font-semibold tabular-nums">

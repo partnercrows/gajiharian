@@ -7,6 +7,7 @@ const employeeSchema = z.object({
   dailySalary: z.number(),
   workingDays: z.number(),
   kasbon: z.number().optional(),
+  lembur: z.number().optional(),
   status: z.enum(["paid", "unpaid"]),
   catatan: z.string().optional(),
 });

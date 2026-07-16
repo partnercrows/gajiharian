@@ -7,6 +7,7 @@ export interface Employee {
   dailySalary: number;
   workingDays: number;
   kasbon?: number;
+  lembur?: number;
   status: PaymentStatus;
   catatan?: string; // free text, one line per point
 }

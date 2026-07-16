@@ -281,13 +281,18 @@ export const useInvoiceStore = create<InvoiceState>()(
 );
 
 export const totalForEmployee = (e: Employee) =>
-  (Number(e.dailySalary) || 0) * (Number(e.workingDays) || 0) - (Number(e.kasbon) || 0);
+  (Number(e.dailySalary) || 0) * (Number(e.workingDays) || 0) -
+  (Number(e.kasbon) || 0) +
+  (Number(e.lembur) || 0);
 
 export const grandTotal = (list: Employee[]) =>
   list.reduce((sum, e) => sum + totalForEmployee(e), 0);
 
 export const totalKasbon = (list: Employee[]) =>
   list.reduce((sum, e) => sum + (Number(e.kasbon) || 0), 0);
+
+export const totalLembur = (list: Employee[]) =>
+  list.reduce((sum, e) => sum + (Number(e.lembur) || 0), 0);
 
 export const totalWorkingDays = (list: Employee[]) =>
   list.reduce((sum, e) => sum + (Number(e.workingDays) || 0), 0);
