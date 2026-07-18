@@ -4,6 +4,8 @@ Aplikasi payroll harian (invoice gaji pekerja harian) yang berjalan sepenuhnya o
 
 Tersedia sebagai aplikasi web (dijalankan di browser) maupun aplikasi desktop (Windows/Linux/macOS) lewat [Tauri](https://tauri.app/).
 
+**Pengguna aplikasi:** lihat [Panduan Instalasi](PANDUAN_INSTALASI.md) dan [Panduan Penggunaan](PANDUAN_PENGGUNAAN.md).
+
 ## Fitur
 
 - Input data karyawan: upah harian, jumlah hari kerja, lembur, kasbon, status pembayaran, catatan.
