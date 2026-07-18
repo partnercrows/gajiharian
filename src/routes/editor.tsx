@@ -95,17 +95,21 @@ function EditorPage() {
     toast.success("Draft tersimpan lokal");
   };
 
-  const handleExport = () => {
-    var settings = { companyName: useInvoiceStore.getState().companyName, companyAddress: useInvoiceStore.getState().companyAddress, companyPhone: useInvoiceStore.getState().companyPhone, companyLogo: useInvoiceStore.getState().companyLogo };
-    exportProject({
-      id: header.invoiceNumber,
-      header,
-      employees,
-      signature,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-    }, drafts, templates, settings);
-    toast.success("Project file downloaded");
+  const handleExport = async () => {
+    const settings = { companyName: useInvoiceStore.getState().companyName, companyAddress: useInvoiceStore.getState().companyAddress, companyPhone: useInvoiceStore.getState().companyPhone, companyLogo: useInvoiceStore.getState().companyLogo };
+    try {
+      const saved = await exportProject({
+        id: header.invoiceNumber,
+        header,
+        employees,
+        signature,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      }, drafts, templates, settings);
+      if (saved) toast.success("Project file downloaded");
+    } catch (err) {
+      toast.error("Gagal menyimpan file backup", { description: (err as Error).message });
+    }
   };
 
   const handleOpenFile = async (file: File) => {

@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { InvoiceProject, WorkerTemplate } from "./types";
+import { saveFile } from "./save-file";
 
 const employeeSchema = z.object({
   id: z.string(),
@@ -73,7 +74,7 @@ const payrollFileSchema = z.object({
   settings: settingsSchema.optional(),
 });
 
-export const exportProject = (
+export const exportProject = async (
   project: InvoiceProject,
   drafts?: InvoiceProject[],
   templates?: WorkerTemplate[],
@@ -93,14 +94,14 @@ export const exportProject = (
     templates: templates || [],
     settings: settings || { companyName: "Gaji Harian", companyAddress: "", companyPhone: "" },
   };
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
+  const bytes = new TextEncoder().encode(JSON.stringify(data, null, 2));
   const safeTitle = (project.header.projectTitle || "untitled").replace(/[^a-z0-9-_]+/gi, "-");
-  a.download = filename ?? `${safeTitle}.payroll`;
-  a.click();
-  URL.revokeObjectURL(url);
+  return saveFile(bytes, {
+    suggestedName: filename ?? `${safeTitle}.payroll`,
+    filterName: "Payroll",
+    extensions: ["payroll"],
+    mimeType: "application/json",
+  });
 };
 
 export const importProject = async (

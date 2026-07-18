@@ -40,6 +40,14 @@ export function ExcelImportDialog({ open, onOpenChange }: Props) {
     }
   };
 
+  const handleDownloadTemplate = async () => {
+    try {
+      await downloadTemplateXlsx();
+    } catch (err) {
+      toast.error("Gagal menyimpan template", { description: (err as Error).message });
+    }
+  };
+
   const onApply = (mode: "replace" | "append") => {
     if (!result) return;
     var imported = result.imported;
@@ -60,7 +68,7 @@ export function ExcelImportDialog({ open, onOpenChange }: Props) {
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2"><FileSpreadsheet className="h-5 w-5 text-primary" /> Impor dari Excel</DialogTitle>
           <DialogDescription>
-            Unggah file .xlsx. Kolom: <b>Nama Karyawan</b>, <b>Upah Harian</b>, <b>Hari Kerja</b>, <b>Kasbon</b> (opsional).
+            Unggah file .xlsx. Kolom: <b>Nama Karyawan</b>, <b>Upah Harian</b>, <b>Hari Kerja</b>, <b>Lembur</b>, <b>Kasbon</b>, <b>Catatan</b> (3 terakhir opsional).
           </DialogDescription>
         </DialogHeader>
 
@@ -68,7 +76,7 @@ export function ExcelImportDialog({ open, onOpenChange }: Props) {
           <div className="space-y-4">
             <div className="flex items-center justify-between p-3 rounded-md bg-muted/60 text-sm">
               <span>Belum punya file?</span>
-              <Button size="sm" variant="outline" onClick={downloadTemplateXlsx}>
+              <Button size="sm" variant="outline" onClick={handleDownloadTemplate}>
                 <FileDown className="h-4 w-4" /> Unduh template
               </Button>
             </div>
