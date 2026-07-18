@@ -17,15 +17,27 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - run: npm ci
+      # `npm ci` intermittently fails to install the correct platform-specific
+      # optional dependency (rolldown's native binding) on Linux runners --
+      # a known npm bug (npm/cli#4828). `npm install` resolves it reliably.
+      - run: npm install
       - name: npm audit (moderate and above)
         run: npm audit --audit-level=moderate
 
   cargo-audit:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
     steps:
       - uses: actions/checkout@v4
       - uses: rustsec/audit-check@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           working-directory: src-tauri
+          # RUSTSEC-2026-0194/0195: DoS in quick-xml, pulled in transitively
+          # via `plist` (used by tauri-build only to read/write our own
+          # Info.plist at macOS bundling time -- never parses untrusted/
+          # user-supplied XML at runtime). Tracked via Dependabot for when a
+          # `plist` release upgrades past it; not a live attack surface today.
+          ignore: RUSTSEC-2026-0194,RUSTSEC-2026-0195

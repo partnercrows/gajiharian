@@ -55,8 +55,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev patchelf file
 
+      # `npm ci` intermittently fails to install the correct platform-specific
+      # optional dependency (rolldown's native binding) on Linux/macOS runners
+      # even though it's correctly listed in the lockfile -- a known npm bug
+      # (npm/cli#4828). `npm install` resolves it reliably.
       - name: Install frontend dependencies
-        run: npm ci
+        run: npm install
 
       # IMPORTANT (Windows only, but harmless everywhere): do NOT load
       # vcvars64.bat / a VS Developer Command Prompt before this step. Doing

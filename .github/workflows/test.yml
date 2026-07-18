@@ -17,8 +17,12 @@ jobs:
           node-version: 22
           cache: npm
 
+      # `npm ci` intermittently fails to install the correct platform-specific
+      # optional dependency (rolldown's native binding) on Linux runners even
+      # though it's correctly listed in the lockfile -- a known npm bug
+      # (npm/cli#4828). `npm install` resolves it reliably.
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Type-check
         run: npx tsc --noEmit
