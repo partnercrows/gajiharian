@@ -1,4 +1,4 @@
-name: Build Windows Installer
+name: Build Desktop Installers
 
 on:
   push:
@@ -7,8 +7,33 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  build-windows:
-    runs-on: windows-latest
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            rust-targets: x86_64-pc-windows-msvc
+            build-script: tauri:build:windows-x64
+            bundle-glob: src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe
+            artifact-name: gaji-harian-windows-x64
+          - os: ubuntu-latest
+            rust-targets: x86_64-unknown-linux-gnu
+            build-script: tauri:build:linux-deb
+            bundle-glob: src-tauri/target/x86_64-unknown-linux-gnu/release/bundle/deb/*.deb
+            artifact-name: gaji-harian-linux-deb
+          - os: ubuntu-latest
+            rust-targets: x86_64-unknown-linux-gnu
+            build-script: tauri:build:linux-appimage
+            bundle-glob: src-tauri/target/x86_64-unknown-linux-gnu/release/bundle/appimage/*.AppImage
+            artifact-name: gaji-harian-linux-appimage
+          - os: macos-latest
+            rust-targets: x86_64-apple-darwin,aarch64-apple-darwin
+            build-script: tauri:build:macos
+            bundle-glob: src-tauri/target/universal-apple-darwin/release/bundle/dmg/*.dmg
+            artifact-name: gaji-harian-macos
+
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
 
@@ -18,31 +43,37 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@stable
         with:
-          targets: x86_64-pc-windows-msvc
+          targets: ${{ matrix.rust-targets }}
 
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: src-tauri
 
+      - name: Install Linux system dependencies
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev patchelf file
+
       - name: Install frontend dependencies
         run: npm ci
 
-      # IMPORTANT: do NOT load vcvars64.bat / a VS Developer Command Prompt
-      # before this step. Doing so was confirmed to corrupt the Vite/Rolldown
-      # frontend bundle (React ends up duplicated, causing a runtime crash).
-      # rustc/cargo auto-discover the MSVC toolchain on their own — see the
-      # comments in build-windows-x64.bat for the full story.
-      - name: Build Windows (x64) installer
-        run: npm run tauri:build:windows-x64
+      # IMPORTANT (Windows only, but harmless everywhere): do NOT load
+      # vcvars64.bat / a VS Developer Command Prompt before this step. Doing
+      # so was confirmed to corrupt the Vite/Rolldown frontend bundle (React
+      # ends up duplicated, causing a runtime crash). rustc/cargo auto-discover
+      # the MSVC toolchain on their own -- see build-windows-x64.bat.
+      - name: Build installer
+        run: npm run ${{ matrix.build-script }}
 
       - name: Upload installer artifact
         uses: actions/upload-artifact@v4
         with:
-          name: gaji-harian-windows-x64
-          path: src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe
+          name: ${{ matrix.artifact-name }}
+          path: ${{ matrix.bundle-glob }}
 
       - name: Attach installer to GitHub Release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe
+          files: ${{ matrix.bundle-glob }}
