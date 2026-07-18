@@ -17,8 +17,6 @@
     "fs:allow-mkdir",
     "fs:allow-remove",
     "fs:allow-rename",
-    "fs:allow-read-dir",
-    "shell:default",
-    "shell:allow-open"
+    "fs:allow-read-dir"
   ]
 }

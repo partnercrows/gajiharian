@@ -185,7 +185,7 @@ export function PayrollTable() {
                             size="icon"
                             className={cn(
                               "h-8 w-8",
-                              e.catatan?.trim() ? "text-amber-600 hover:text-amber-600" : "",
+                              e.catatan?.trim() ? "text-warning hover:text-warning" : "",
                             )}
                             title="Catatan Karyawan"
                           >
