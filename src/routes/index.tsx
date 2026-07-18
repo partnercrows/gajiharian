@@ -9,6 +9,7 @@ import {
   Clock,
 } from "lucide-react";
 import { AppLayout } from "@/components/AppLayout";
+import { BackupReminderBanner } from "@/components/BackupReminderBanner";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useInvoiceStore, grandTotal } from "@/lib/store";
@@ -64,6 +65,8 @@ desc: "Unggah .xlsx. Unduh template, isi, dan kami akan memprosesnya.",
   return (
     <AppLayout>
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+        <BackupReminderBanner />
+
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Selamat datang 👋</h1>
           <p className="text-muted-foreground mt-1.5">

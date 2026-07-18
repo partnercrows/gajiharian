@@ -61,6 +61,8 @@ interface InvoiceState {
   drafts: InvoiceProject[];
   templates: WorkerTemplate[];
   lastSavedAt: number | null;
+  lastExportedAt: number | null;
+  backupReminderDismissedUntil: number | null;
   companyName: string;
   companyAddress: string;
   companyPhone: string;
@@ -99,6 +101,10 @@ interface InvoiceState {
 
   // company
   updateCompany: (patch: { companyName?: string; companyAddress?: string; companyPhone?: string; companyLogo?: string }) => void;
+
+  // backup reminder
+  markExported: () => void;
+  dismissBackupReminder: (snoozeDays?: number) => void;
 }
 
 export const useInvoiceStore = create<InvoiceState>()(
@@ -110,6 +116,8 @@ export const useInvoiceStore = create<InvoiceState>()(
       drafts: [],
       templates: [],
       lastSavedAt: null,
+      lastExportedAt: null,
+      backupReminderDismissedUntil: null,
       companyName: "Gaji Harian",
       companyAddress: "",
       companyPhone: "",
@@ -261,6 +269,10 @@ export const useInvoiceStore = create<InvoiceState>()(
         set((s) => ({ templates: s.templates.filter((t) => t.id !== id) })),
 
       updateCompany: (patch) => set((s) => ({ ...s, ...patch })),
+
+      markExported: () => set({ lastExportedAt: Date.now(), backupReminderDismissedUntil: null }),
+      dismissBackupReminder: (snoozeDays = 1) =>
+        set({ backupReminderDismissedUntil: Date.now() + snoozeDays * 24 * 60 * 60 * 1000 }),
     }),
     {
       name: "gajian-harianku-store",
@@ -271,6 +283,8 @@ export const useInvoiceStore = create<InvoiceState>()(
         signature: s.signature,
         drafts: s.drafts,
         templates: s.templates,
+        lastExportedAt: s.lastExportedAt,
+        backupReminderDismissedUntil: s.backupReminderDismissedUntil,
         companyName: s.companyName,
         companyAddress: s.companyAddress,
         companyPhone: s.companyPhone,

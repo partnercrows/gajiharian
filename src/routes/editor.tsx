@@ -64,6 +64,7 @@ function EditorPage() {
   const templates = useInvoiceStore((s) => s.templates);
   const signature = useInvoiceStore((s) => s.signature);
   const saveDraft = useInvoiceStore((s) => s.saveDraft);
+  const markExported = useInvoiceStore((s) => s.markExported);
   const saveTemplate = useInvoiceStore((s) => s.saveTemplate);
   const loadProject = useInvoiceStore((s) => s.loadProject);
   const reset = useInvoiceStore((s) => s.resetProject);
@@ -106,7 +107,10 @@ function EditorPage() {
         createdAt: Date.now(),
         updatedAt: Date.now(),
       }, drafts, templates, settings);
-      if (saved) toast.success("Project file downloaded");
+      if (saved) {
+        markExported();
+        toast.success("Project file downloaded");
+      }
     } catch (err) {
       toast.error("Gagal menyimpan file backup", { description: (err as Error).message });
     }
