@@ -1,0 +1,48 @@
+name: Build Windows Installer
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch: {}
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      # IMPORTANT: do NOT load vcvars64.bat / a VS Developer Command Prompt
+      # before this step. Doing so was confirmed to corrupt the Vite/Rolldown
+      # frontend bundle (React ends up duplicated, causing a runtime crash).
+      # rustc/cargo auto-discover the MSVC toolchain on their own — see the
+      # comments in build-windows-x64.bat for the full story.
+      - name: Build Windows (x64) installer
+        run: npm run tauri:build:windows-x64
+
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: gaji-harian-windows-x64
+          path: src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe
+
+      - name: Attach installer to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe
