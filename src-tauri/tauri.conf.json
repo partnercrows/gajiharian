@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/nicedoc/tauri/dev/crates/tauri-config-schema/schema.json",
   "productName": "Gaji Harian",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "identifier": "com.gajiharian.app",
   "build": {
     "beforeDevCommand": "npm run dev",
