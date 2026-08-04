@@ -8,6 +8,8 @@ on:
 
 jobs:
   build:
+    permissions:
+      contents: write # needed by softprops/action-gh-release to create/update the release
     strategy:
       fail-fast: false
       matrix:
