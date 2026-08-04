@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useInvoiceStore } from "@/lib/store";
 import { toast } from "sonner";
 import { AlertTriangle, Upload } from "lucide-react";
+import { UpdateChecker } from "@/components/UpdateChecker";
 
 export const Route = createFileRoute("/settings")({
   head: () => ({
@@ -70,6 +71,8 @@ function SettingsPage() {
           <p>Semua data (invoice, draft, template) tersimpan di IndexedDB browser. Tidak ada yang dikirim ke server.</p>
           <p>Menghapus data situs di browser akan menghapus semua invoice secara permanen. <span className="text-destructive font-semibold">Ekspor proyek penting sebagai file <code className="font-mono bg-destructive/10 px-1 rounded text-destructive">.payroll</code> untuk cadangan.</span></p>
         </Card>
+
+        <UpdateChecker />
       </div>
     </AppLayout>
   );
